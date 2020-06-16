@@ -13,20 +13,51 @@ value::value(value&& v) :
 		case value_type::null:
 			return;
 		case value_type::boolean:
-			this->val.boolean = v.val.boolean;
+			this->boolean = v.boolean;
 			break;
 		case value_type::string:
 		case value_type::number:
-			new(&this->val.string)std::string(std::move(v.val.string));
+			new(&this->string)std::string(std::move(v.string));
 			break;
 		case value_type::object:
-			new(&this->val.object)decltype(this->val.object)(std::move(v.val.object));
+			new(&this->object)decltype(this->object)(std::move(v.object));
 			break;
 		case value_type::array:
-			new(&this->val.array)decltype(this->val.array)(std::move(v.val.array));
+			new(&this->array)decltype(this->array)(std::move(v.array));
 			break;
 	}
 	v.type = value_type::null;
+}
+
+void value::init(const value& v){
+	this->type = v.type;
+	switch(this->type){
+		case value_type::null:
+			break;
+		case value_type::boolean:
+			this->boolean = v.boolean;
+			break;
+		case value_type::string:
+		case value_type::number:
+			new(&this->string)std::string(v.string);
+			break;
+		case value_type::object:
+			new(&this->object)decltype(this->object)(v.object);
+			break;
+		case value_type::array:
+			new(&this->array)decltype(this->array)(v.array);
+			break;
+	}
+}
+
+value& value::operator=(const value& v){
+	this->~value();
+	this->init(v);
+	return *this;
+}
+
+value::value(const value& v){
+	this->init(v);
 }
 
 value::value(value_type type) :
@@ -38,13 +69,31 @@ value::value(value_type type) :
 			break;
 		case value_type::string:
 		case value_type::number:
-			new(&this->val.string)std::string();
+			new(&this->string)std::string();
 			break;
 		case value_type::object:
-			new(&this->val.object)decltype(this->val.object)();
+			new(&this->object)decltype(this->object)();
 			break;
 		case value_type::array:
-			new(&this->val.array)decltype(this->val.array)();
+			new(&this->array)decltype(this->array)();
+			break;
+	}
+}
+
+value::~value()noexcept{
+	switch(this->type){
+		case value_type::null:
+		case value_type::boolean:
+			break;
+		case value_type::string:
+		case value_type::number:
+			this->string.~basic_string<char>();
+			break;
+		case value_type::object:
+			this->object.~map<std::string, value>();
+			break;
+		case value_type::array:
+			this->array.~vector<value>();
 			break;
 	}
 }
@@ -95,7 +144,22 @@ struct dom_parser : public parser{
 
 jsondom::value jsondom::read(const papki::file& fi){
 	dom_parser p;
-	// TODO:
+	
+	{
+		papki::file::guard file_guard(fi);
+
+		std::array<uint8_t, 4096> buf; // 4k
+
+		while(true){
+			auto res = fi.read(utki::make_span(buf));
+			ASSERT_ALWAYS(res <= buf.size())
+			if(res == 0){
+				break;
+			}
+			p.feed(utki::make_span(buf.data(), res));
+		}
+	}
+
 	ASSERT(p.stack.size() == 1)
 	return std::move(p.stack.front());
 }

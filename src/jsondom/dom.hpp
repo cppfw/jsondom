@@ -18,26 +18,29 @@ enum class value_type{
 };
 
 class value{
+	void init(const value& v);
 public:
 	value_type type;
 
-	union variant{
+	union{
 		bool boolean;
 		std::string string;
 		std::vector<value> array;
 		std::map<std::string, value> object;
-		variant(){}
-		~variant(){}
-	}val;
+	};
 
 	template <value_type V> bool is()const noexcept{
 		return this->type == V;
 	}
 
 	value(){}
+	value(const value& v);
+	value& operator=(const value& v);
 	value(value&& v);
 
 	value(value_type type);
+
+	~value()noexcept;
 };
 
 void write(papki::file& fi, const value& v);
