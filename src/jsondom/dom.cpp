@@ -7,45 +7,45 @@
 using namespace jsondom;
 
 value::value(value&& v) :
-		type(v.type)
+		stored_type(v.stored_type)
 {
-	switch(this->type){
+	switch(this->stored_type){
 		case value_type::null:
 			return;
 		case value_type::boolean:
-			this->boolean = v.boolean;
+			this->var.boolean = v.var.boolean;
 			break;
 		case value_type::string:
 		case value_type::number:
-			new(&this->string)std::string(std::move(v.string));
+			new(&this->var.string)std::string(std::move(v.var.string));
 			break;
 		case value_type::object:
-			new(&this->object)decltype(this->object)(std::move(v.object));
+			new(&this->var.object)decltype(this->var.object)(std::move(v.var.object));
 			break;
 		case value_type::array:
-			new(&this->array)decltype(this->array)(std::move(v.array));
+			new(&this->var.array)decltype(this->var.array)(std::move(v.var.array));
 			break;
 	}
-	v.type = value_type::null;
+	v.stored_type = value_type::null;
 }
 
 void value::init(const value& v){
-	this->type = v.type;
-	switch(this->type){
+	this->stored_type = v.stored_type;
+	switch(this->stored_type){
 		case value_type::null:
 			break;
 		case value_type::boolean:
-			this->boolean = v.boolean;
+			this->var.boolean = v.var.boolean;
 			break;
 		case value_type::string:
 		case value_type::number:
-			new(&this->string)std::string(v.string);
+			new(&this->var.string)std::string(v.var.string);
 			break;
 		case value_type::object:
-			new(&this->object)decltype(this->object)(v.object);
+			new(&this->var.object)decltype(this->var.object)(v.var.object);
 			break;
 		case value_type::array:
-			new(&this->array)decltype(this->array)(v.array);
+			new(&this->var.array)decltype(this->var.array)(v.var.array);
 			break;
 	}
 }
@@ -61,41 +61,67 @@ value::value(const value& v){
 }
 
 value::value(value_type type) :
-	type(type)
+	stored_type(type)
 {
-	switch(this->type){
+	switch(this->stored_type){
 		case value_type::null:
 		case value_type::boolean:
 			break;
 		case value_type::string:
 		case value_type::number:
-			new(&this->string)std::string();
+			new(&this->var.string)std::string();
 			break;
 		case value_type::object:
-			new(&this->object)decltype(this->object)();
+			new(&this->var.object)decltype(this->var.object)();
 			break;
 		case value_type::array:
-			new(&this->array)decltype(this->array)();
+			new(&this->var.array)decltype(this->var.array)();
 			break;
 	}
 }
 
 value::~value()noexcept{
-	switch(this->type){
+	switch(this->stored_type){
 		case value_type::null:
 		case value_type::boolean:
 			break;
 		case value_type::string:
 		case value_type::number:
-			this->string.~basic_string<char>();
+			this->var.string.~basic_string<char>();
 			break;
 		case value_type::object:
-			this->object.~map<std::string, value>();
+			this->var.object.~map<std::string, value>();
 			break;
 		case value_type::array:
-			this->array.~vector<value>();
+			this->var.array.~vector<value>();
 			break;
 	}
+}
+
+namespace{
+std::string type_to_name(value_type type){
+	switch(type){
+		case value_type::null:
+			return "null";
+		case value_type::boolean:
+			return "boolean";
+		case value_type::number:
+			return "number";
+		case value_type::string:
+			return "string";
+		case value_type::object:
+			return "object";
+		case value_type::array:
+			return "array";
+	}
+	return nullptr;
+}
+}
+
+void value::throw_access_error(value_type tried_access)const{
+	std::stringstream ss;
+	ss << "jsondom: could not access " << type_to_name(tried_access) << "value, stored value is of another type (" << type_to_name(this->type()) << ")";
+	throw std::logic_error(ss.str());
 }
 
 namespace{
