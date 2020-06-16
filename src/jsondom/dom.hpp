@@ -39,8 +39,11 @@ public:
 	value(const value& v);
 	value& operator=(const value& v);
 	value(value&& v);
-	value(value_type type);
 	~value()noexcept;
+
+	value(value_type type);
+	value(std::string&& str);
+	value(bool b);
 
 	value_type type()const noexcept{
 		return this->stored_type;
@@ -57,7 +60,21 @@ public:
 		return this->var.boolean;
 	}
 
+	bool boolean()const{
+		if(!this->is<value_type::boolean>()){
+			this->throw_access_error(value_type::boolean);
+		}
+		return this->var.boolean;
+	}
+
 	std::string& string(){
+		if(!this->is<value_type::string>()){
+			this->throw_access_error(value_type::string);
+		}
+		return this->var.string;
+	}
+
+	const std::string& string()const{
 		if(!this->is<value_type::string>()){
 			this->throw_access_error(value_type::string);
 		}
@@ -71,7 +88,21 @@ public:
 		return this->var.array;
 	}
 
+	const decltype(var.array)& array()const{
+		if(!this->is<value_type::array>()){
+			this->throw_access_error(value_type::array);
+		}
+		return this->var.array;
+	}
+
 	decltype(var.object)& object(){
+		if(!this->is<value_type::object>()){
+			this->throw_access_error(value_type::object);
+		}
+		return this->var.object;
+	}
+
+	const decltype(var.object)& object()const{
 		if(!this->is<value_type::object>()){
 			this->throw_access_error(value_type::object);
 		}

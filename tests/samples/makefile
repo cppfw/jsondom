@@ -50,6 +50,7 @@ $(.RECIPEPREFIX)$(a)for f in $(this_samples); do \
 	    cmp $(d)out.json $$$$f.cmp; \
 	    if [ $$$$? -ne 0 ]; then myci-error.sh "parsed JSON did not match etalon sample"; exit 1; fi \
 	done
+$(.RECIPEPREFIX)$(a)rm $(d)out.json
 $(.RECIPEPREFIX)@myci-passed.sh
 endef
 $(eval $(this_rules))

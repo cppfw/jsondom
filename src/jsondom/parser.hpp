@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <utki/span.hpp>
 
 namespace jsondom{
@@ -11,7 +13,9 @@ class parser{
 		idle,
 		object,
 		array
-	} cur_state = state::idle;
+	};
+
+	std::vector<state> state_stack{state::idle};
 
 	void parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_object(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);

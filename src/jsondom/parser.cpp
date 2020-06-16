@@ -8,7 +8,8 @@ using namespace jsondom;
 
 void parser::feed(utki::span<const char> data){
 	for(auto i = data.begin(), e = data.end(); i != e; ++i){
-		switch(this->cur_state){
+		ASSERT(!this->state_stack.empty())
+		switch(this->state_stack.back()){
 			case state::idle:
 				this->parse_idle(i, e);
 				break;
@@ -36,11 +37,11 @@ void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::c
 			case '\t':
 				break;
 			case '[':
-				this->cur_state = state::array;
+				this->state_stack.push_back(state::array);
 				this->on_array_start();
 				return;
 			case '{':
-				this->cur_state = state::object;
+				this->state_stack.push_back(state::object);
 				this->on_object_start();
 				return;
 			default:
@@ -61,14 +62,10 @@ void parser::parse_object(utki::span<char>::const_iterator& i, utki::span<char>:
 			case '\r':
 			case '\t':
 				break;
-			// case '[':
-			// 	this->cur_state = state::array;
-			// 	this->on_array_start();
-			// 	return;
-			// case '{':
-			// 	this->cur_state = state::object;
-			// 	this->on_object_start();
-			// 	return;
+			case '}':
+				this->state_stack.pop_back();
+				this->on_object_end();
+				return;
 			// default:
 			// 	std::stringstream ss;
 			// 	ss << "unexpected character '" << *i << "' encountered while in idle state";
