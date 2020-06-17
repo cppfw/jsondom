@@ -242,7 +242,7 @@ struct dom_parser : public parser{
 		}
 	}
 
-	void on_boolean_parsed(bool b){
+	void on_boolean_parsed(bool b)override{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
 		switch(back->type()){
@@ -259,7 +259,7 @@ struct dom_parser : public parser{
 		}
 	}
 
-	void on_null_parsed(){
+	void on_null_parsed()override{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
 		switch(back->type()){
