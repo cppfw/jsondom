@@ -42,8 +42,8 @@ void parser::feed(utki::span<const char> data){
 			case state::string:
 				this->parse_string(i, e);
 				break;
-			case state::boolean_or_null:
-				this->parse_boolean_or_null(i, e);
+			case state::boolean_or_null_or_number:
+				this->parse_boolean_or_null_or_number(i, e);
 				break;
 		}
 		if(i == e){
@@ -173,10 +173,18 @@ void parser::parse_value(utki::span<char>::const_iterator& i, utki::span<char>::
 				this->buf.push_back(*i);
 				this->state_stack.pop_back();
 				this->state_stack.push_back(state::comma);
-				this->state_stack.push_back(state::boolean_or_null);
+				this->state_stack.push_back(state::boolean_or_null_or_number);
 				return;
 			default:
-				this->throw_malformed_json_error(*i, "value");
+				if( ('0' <= *i && *i <= '9') || *i == '-' ){
+					this->buf.push_back(*i);
+					this->state_stack.pop_back();
+					this->state_stack.push_back(state::comma);
+					this->state_stack.push_back(state::boolean_or_null_or_number);
+					return;
+				}else{
+					this->throw_malformed_json_error(*i, "value");
+				}
 				break;
 		}
 	}
@@ -216,10 +224,17 @@ void parser::parse_array(utki::span<char>::const_iterator& i, utki::span<char>::
 				ASSERT(this->buf.empty())
 				this->buf.push_back(*i);
 				this->state_stack.push_back(state::comma);
-				this->state_stack.push_back(state::boolean_or_null);
+				this->state_stack.push_back(state::boolean_or_null_or_number);
 				return;
 			default:
-				this->throw_malformed_json_error(*i, "array");
+				if( ('0' <= *i && *i <= '9') || *i == '-' ){
+					this->buf.push_back(*i);
+					this->state_stack.push_back(state::comma);
+					this->state_stack.push_back(state::boolean_or_null_or_number);
+					return;
+				}else{
+					this->throw_malformed_json_error(*i, "array");
+				}
 				break;
 		}
 	}
@@ -280,7 +295,7 @@ void parser::parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::
 	}
 }
 
-void parser::parse_boolean_or_null(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_boolean_or_null_or_number(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -288,11 +303,11 @@ void parser::parse_boolean_or_null(utki::span<char>::const_iterator& i, utki::sp
 			case '\r':
 			case '\t':
 			case ' ':
-				this->notify_boolean_or_null_parsed();
+				this->notify_boolean_or_null_or_number_parsed();
 				this->state_stack.pop_back();
 				return;
 			case ',':
-				this->notify_boolean_or_null_parsed();
+				this->notify_boolean_or_null_or_number_parsed();
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
 				ASSERT(this->state_stack.back() == state::comma)
@@ -300,7 +315,7 @@ void parser::parse_boolean_or_null(utki::span<char>::const_iterator& i, utki::sp
 				ASSERT(!this->state_stack.empty())
 				return;
 			case ']':
-				this->notify_boolean_or_null_parsed();
+				this->notify_boolean_or_null_or_number_parsed();
 				this->on_array_end();
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
@@ -318,18 +333,111 @@ void parser::parse_boolean_or_null(utki::span<char>::const_iterator& i, utki::sp
 	}
 }
 
-void parser::notify_boolean_or_null_parsed(){
+namespace{
+bool is_valid_number_string(const std::string& s){
+	enum class state{
+		idle,
+		sign,
+		integer,
+		dot,
+		fraction,
+		exponent,
+		exponent_sign,
+		exponent_integer
+	} cur_state = state::idle;
+	
+	for(auto c : s){
+		switch(cur_state){
+			case state::idle:
+				if(c == '-'){
+					cur_state = state::sign; // sign parsed
+					break;
+				}else if('0' <= c && c <= '9'){
+					cur_state = state::integer;
+					break;
+				}
+				return false;
+			case state::sign:
+				if('0' <= c && c <= '9'){
+					cur_state = state::integer;
+					break;
+				}
+				return false;
+			case state::integer:
+				if('0' <= c && c <= '9'){
+					break;
+				}else if(c == '.'){
+					cur_state = state::dot; // dot parsed
+					break;
+				}else if(c == 'e' || c == 'E'){
+					cur_state = state::exponent; // exponent parsed
+					break;
+				}
+				return false;
+			case state::dot:
+				if('0' <= c && c <= '9'){
+					cur_state = state::fraction;
+					break;
+				}
+				return false;
+			case state::fraction:
+				if('0' <= c && c <= '9'){
+					break;
+				}else if(c == 'e' || c == 'E'){
+					cur_state = state::exponent; // exponent parsed
+					break;
+				}
+				return false;
+			case state::exponent:
+				if(c == '-' || c == '+'){
+					cur_state = state::exponent_sign; // exponent sign parsed
+					break;
+				}else if('0' <= c && c <= '9'){
+					cur_state = state::exponent_integer;
+					break;
+				}
+				return false;
+			case state::exponent_sign:
+				if('0' <= c && c <= '9'){
+					cur_state = state::exponent_integer;
+					break;
+				}
+				return false;
+			case state::exponent_integer:
+				if('0' <= c && c <= '9'){
+					break;
+				}
+				return false;
+		}
+	}
+
+	if(cur_state == state::sign
+			|| cur_state == state::dot
+			|| cur_state == state::exponent
+			|| cur_state == state::exponent_sign
+		)
+	{
+		return false;
+	}
+
+	return true;
+}
+}
+
+void parser::notify_boolean_or_null_or_number_parsed(){
 	auto s = utki::make_string(this->buf);
-	this->buf.clear();
 	if(s == "true"){
 		this->on_boolean_parsed(true);
 	}else if(s == "false"){
 		this->on_boolean_parsed(false);
 	}else if(s == "null"){
 		this->on_null_parsed();
+	}else if(is_valid_number_string(s)){
+		this->on_number_parsed(utki::make_span(this->buf));
 	}else{
 		std::stringstream ss;
-		ss << "unexpected string (" << s << ") encountered while parsing boolean or null at line " << this->line;
+		ss << "unexpected string (" << s << ") encountered while parsing boolean or null or number at line " << this->line;
 		throw malformed_json_error(ss.str());
 	}
+	this->buf.clear();
 }

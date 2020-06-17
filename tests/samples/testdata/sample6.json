@@ -1,0 +1,20 @@
+{
+	"number": 1234,
+	"negative": -13  ,
+	"real": 13.25,
+	"negative_real": -13.25,
+	"exponent": 1.3e5 ,
+	"negative_exponent": -1.13e6,
+	"capital_exponent": 13.26E3,
+	"negative_power": 13.26e-3,
+	"array":[
+		1234	,
+		-13,
+		13.25,
+		-13.25 ,
+		1.3e5,
+		-1.13e6,
+		13.26E3,
+		13.26e-3
+	]
+}
