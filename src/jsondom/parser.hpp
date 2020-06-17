@@ -12,7 +12,12 @@ class parser{
 	enum class state{
 		idle,
 		object,
-		array
+		array,
+		key,
+		colon,
+		value,
+		comma,
+		string
 	};
 
 	std::vector<state> state_stack{state::idle};
@@ -20,8 +25,15 @@ class parser{
 	void parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_object(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_array(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_key(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_colon(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_string(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 
 	std::vector<char> buf;
+
+	void throw_malformed_json_error(char unexpected_char, const std::string& state_name);
 public:
 	virtual ~parser()noexcept{}
 
@@ -29,7 +41,7 @@ public:
 	virtual void on_object_end() = 0;
 	virtual void on_array_start() = 0;
 	virtual void on_array_end() = 0;
-	virtual void on_name_parsed(utki::span<const char> str) = 0;
+	virtual void on_key_parsed(utki::span<const char> str) = 0;
 	virtual void on_string_parsed(utki::span<const char> str) = 0;
 	virtual void on_number_parsed(utki::span<const char> str) = 0;
 	virtual void on_boolean_parsed(bool b) = 0;

@@ -140,7 +140,7 @@ namespace{
 struct dom_parser : public parser{
 	value doc{value_type::array};
 
-	std::string name;
+	std::string key;
 
 	std::vector<value*> stack = {&this->doc};
 
@@ -153,9 +153,9 @@ struct dom_parser : public parser{
 				this->stack.push_back(&back->array().back());
 				break;
 			case value_type::object:
-				back->object()[name] = value(value_type::object);
-				this->stack.push_back(&back->object()[name]);
-				this->name.clear();
+				back->object()[this->key] = value(value_type::object);
+				this->stack.push_back(&back->object()[this->key]);
+				this->key.clear();
 				break;
 			default:
 				ASSERT(false)
@@ -176,9 +176,9 @@ struct dom_parser : public parser{
 				this->stack.push_back(&back->array().back());
 				break;
 			case value_type::object:
-				back->object()[name] = value(value_type::array);
-				this->stack.push_back(&back->object()[name]);
-				this->name.clear();
+				back->object()[this->key] = value(value_type::array);
+				this->stack.push_back(&back->object()[this->key]);
+				this->key.clear();
 				break;
 			default:
 				ASSERT(false)
@@ -190,8 +190,8 @@ struct dom_parser : public parser{
 		this->stack.pop_back();
 	}
 
-	void on_name_parsed(utki::span<const char> str)override{
-		this->name = utki::make_string(str);
+	void on_key_parsed(utki::span<const char> str)override{
+		this->key = utki::make_string(str);
 	}
 
 	void on_string_parsed(utki::span<const char> str)override{
@@ -202,8 +202,8 @@ struct dom_parser : public parser{
 				back->array().emplace_back(utki::make_string(str));
 				break;
 			case value_type::object:
-				back->object()[name] = value(utki::make_string(str));
-				this->name.clear();
+				back->object()[this->key] = value(utki::make_string(str));
+				this->key.clear();
 				break;
 			default:
 				ASSERT(false)
@@ -223,8 +223,8 @@ struct dom_parser : public parser{
 				back->array().emplace_back(b);
 				break;
 			case value_type::object:
-				back->object()[name] = value(b);
-				this->name.clear();
+				back->object()[this->key] = value(b);
+				this->key.clear();
 				break;
 			default:
 				ASSERT(false)
@@ -240,8 +240,8 @@ struct dom_parser : public parser{
 				back->array().emplace_back();
 				break;
 			case value_type::object:
-				back->object()[name] = value();
-				this->name.clear();
+				back->object()[this->key] = value();
+				this->key.clear();
 				break;
 			default:
 				ASSERT(false)
