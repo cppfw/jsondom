@@ -7,7 +7,7 @@
 namespace jsondom{
 
 class parser{
-	unsigned line = 0;
+	unsigned line = 1;
 
 	enum class state{
 		idle,
@@ -17,7 +17,8 @@ class parser{
 		colon,
 		value,
 		comma,
-		string
+		string,
+		boolean_or_null
 	};
 
 	std::vector<state> state_stack{state::idle};
@@ -30,6 +31,9 @@ class parser{
 	void parse_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_string(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_boolean_or_null(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+
+	void notify_boolean_or_null_parsed();
 
 	std::vector<char> buf;
 

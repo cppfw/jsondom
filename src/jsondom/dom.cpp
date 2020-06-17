@@ -269,7 +269,7 @@ jsondom::value jsondom::read(const papki::file& fi){
 		}
 	}
 
-	ASSERT(p.stack.size() == 1)
+	ASSERT_INFO(p.stack.size() == 1, "p.stack.size() = " << p.stack.size())
 	ASSERT(p.doc.is<value_type::array>())
 
 	if(p.doc.array().empty()){

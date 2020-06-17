@@ -1,0 +1,12 @@
+{
+	"bool_true": true,
+	"bool_false": false,
+	"null": null,
+	"array": [
+		true  , 
+		true,
+		false,
+		null,
+		null ,
+		false]
+}
