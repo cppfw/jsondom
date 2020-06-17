@@ -56,10 +56,11 @@ env:
   # Encrypted MYCI_GIT_ACCESS_TOKEN for publishing to homebrew-tap.
   - secure: "KzridCpsGqwZKHyUTep6ZyLggQN1q5xWUEAn1p27bqPaym9A2JVPYr2vIjAvrDL3Zs9gHlLyIATT/Ce8DgrhygfW3j0MT2Xv+grojvprgODNeyLk2j1KAUzxXn5Xg+VIa5SQwLJEY4U3C9nsn8w+w0uMcyCfeSYYvZi9NniUsH58qdZptWWcDaTM586EkMTWJK+6JCqoOcDPOyZIQxm1NQCiQFYgIOD1db+mwMm1dP78L3OO2nyBD9WRmXswdKSlqLSRimOFE3Qsrl2ArVP6OIEV6/MJs356y2mhyMINjnaKnNsH19t/FDZZMbbwyggk+rI7bxq5MZM3RxAtPOHYT1CPZ/8KorxnirkhLJ+I+Oa0wAQpytYJjEl4iFXW6lIZjTbeX+KHknTTyYeo6Tla/kIcyVyxahc6h1aYy05G8grUhlb2OQdGmeruRje0DKlVmZ/vF6hfVYlny10kN16nN12q9zw3qMykdWRfxQxlurBkofwjjLy1+vcedO/xqsH9rHIQ6SX5CBQ5mdn+gtvUxboT4KIj2I5E3Ycd95lpWLSfrz0amO/sJeg1fGLQWPZZ+96Tn5246WsTqEHiUDAVamZNepQTOAW794fpf8hLMwWiB2uds0HOe7PfMjaXhuAfXPZdgHnJRopopB3wjA24YADNIT86SGDPbp10TbOGKTE="
   - MYCI_GIT_USERNAME=igagis
-  - PACKAGE_NAME=cssdom
+  - PACKAGE_NAME=jsondom
   jobs:
-  - OS_REL=xenial OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
+  # - OS_REL=xenial OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=bionic OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
+  - OS_REL=eoan OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=stretch OS=debian DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=buster OS=debian DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=buster OS=debian DOCKER_IMAGE=i386/$OS:$OS_REL PACKAGE_TYPE=deb
@@ -80,7 +81,7 @@ before_install:
     fi;
   fi
 - if [ "$TRAVIS_JOB_NAME" == "macosx" ]; then
-    brew install prorab prorab-extra libutki libpapki libclargs;
+    brew install prorab prorab-extra libutki libpapki libclargs libunikod;
   fi
 - if [ "$TRAVIS_JOB_NAME" == "ios" ]; then
     sudo gem install cocoapods &&

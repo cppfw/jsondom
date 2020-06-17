@@ -1,0 +1,36 @@
+Source: libjsondom
+Section: libs
+Priority: extra
+Maintainer: Ivan Gagis <igagis@gmail.com>
+Build-Depends: debhelper (>= 9), prorab,
+		libc6-dev, libutki-dev, libpapki-dev, libclargs-dev, libunikod-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.2
+
+Package: libjsondom$(soname)
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: JSON cross-platform C++ library.
+ JSON parser and DOM cross-platform C++ library.
+
+Package: libjsondom$(soname)-dbg
+Section: debug
+Architecture: any
+Depends: libjsondom$(soname) (= ${binary:Version}), ${misc:Depends}
+Description: debugging symbols for libjsondom$(soname) package.
+
+Package: libjsondom-dev
+Section: libdevel
+Architecture: any
+Depends: libjsondom$(soname) (= ${binary:Version}), libjsondom$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Suggests: libjsondom-doc
+Description: JSON cross-platform C++ library.
+ JSON parser and DOM cross-platform C++ library.
+
+Package: libjsondom-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for libjsondom library.
+ For more details see description to libjsondom-dev package.

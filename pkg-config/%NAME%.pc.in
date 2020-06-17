@@ -1,0 +1,9 @@
+Name: jsondom   # human-readable name
+Description: JSON parser and DOM C++ library # human-readable description
+Version: $(version)
+URL: https://github.com/igagis/jsondom
+Requires:
+Conflicts:
+Libs: -ljsondom
+Libs.private:
+Cflags:
