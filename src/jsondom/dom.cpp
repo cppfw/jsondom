@@ -358,6 +358,7 @@ void write_internal(papki::file& fi, const jsondom::value& v){
 					fi.write(comma);
 				}
 				fi.write(double_quote);
+				// TODO: escape needed chars in the string
 				fi.write(utki::make_span(i->first));
 				fi.write(double_quote_and_colon);
 				write_internal(fi, i->second);

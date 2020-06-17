@@ -18,6 +18,8 @@ class parser{
 		value,
 		comma,
 		string,
+		string_escape_sequence,
+		unicode_char,
 		boolean_or_null_or_number
 	};
 
@@ -31,11 +33,16 @@ class parser{
 	void parse_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_string(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_string_escape_sequence(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_unicode_char(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_boolean_or_null_or_number(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 
 	void notify_boolean_or_null_or_number_parsed();
 
 	std::vector<char> buf;
+
+	char32_t unicode_char;
+	unsigned unicode_char_digit_num;
 
 	void throw_malformed_json_error(char unexpected_char, const std::string& state_name);
 public:
