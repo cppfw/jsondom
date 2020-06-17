@@ -140,16 +140,19 @@ void parser::parse_value(utki::span<char>::const_iterator& i, utki::span<char>::
 				break;
 			case '{':
 				this->state_stack.pop_back();
+				this->state_stack.push_back(state::comma);
 				this->state_stack.push_back(state::object);
 				this->on_object_start();
 				return;
 			case '[':
 				this->state_stack.pop_back();
+				this->state_stack.push_back(state::comma);
 				this->state_stack.push_back(state::array);
 				this->on_array_start();
 				return;
 			case '"':
 				this->state_stack.pop_back();
+				this->state_stack.push_back(state::comma);
 				this->state_stack.push_back(state::string);
 				return;
 			default:
@@ -169,18 +172,27 @@ void parser::parse_array(utki::span<char>::const_iterator& i, utki::span<char>::
 			case '\r':
 			case '\t':
 				break;
-			// case '[':
-			// 	this->cur_state = state::array;
-			// 	this->on_array_start();
-			// 	return;
-			// case '{':
-			// 	this->cur_state = state::object;
-			// 	this->on_object_start();
-			// 	return;
-			// default:
-			// 	std::stringstream ss;
-			// 	ss << "unexpected character '" << *i << "' encountered while in idle state";
-			// 	throw malformed_json_error(ss.str());
+			case '{':
+				this->state_stack.push_back(state::comma);
+				this->state_stack.push_back(state::object);
+				this->on_object_start();
+				return;
+			case '[':
+				this->state_stack.push_back(state::comma);
+				this->state_stack.push_back(state::array);
+				this->on_array_start();
+				return;
+			case '"':
+				this->state_stack.push_back(state::comma);
+				this->state_stack.push_back(state::string);
+				return;
+			case ']':
+				this->state_stack.pop_back();
+				this->on_array_end();
+				return;
+			default:
+				this->throw_malformed_json_error(*i, "array");
+				break;
 		}
 	}
 }
@@ -197,7 +209,6 @@ void parser::parse_string(utki::span<char>::const_iterator& i, utki::span<char>:
 				this->state_stack.pop_back();
 				this->on_string_parsed(utki::make_span(this->buf));
 				this->buf.clear();
-				this->state_stack.push_back(state::comma);
 				return;
 		}
 	}
