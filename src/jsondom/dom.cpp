@@ -15,8 +15,10 @@ value::value(value&& v) :
 		case value_type::boolean:
 			this->var.boolean = v.var.boolean;
 			break;
-		case value_type::string:
 		case value_type::number:
+			new(&this->var.number)string_number(std::move(v.var.number));
+			break;
+		case value_type::string:
 			new(&this->var.string)std::string(std::move(v.var.string));
 			break;
 		case value_type::object:
@@ -37,8 +39,10 @@ void value::init(const value& v){
 		case value_type::boolean:
 			this->var.boolean = v.var.boolean;
 			break;
-		case value_type::string:
 		case value_type::number:
+			new(&this->var.number)string_number(v.var.number);
+			break;
+		case value_type::string:
 			new(&this->var.string)std::string(v.var.string);
 			break;
 		case value_type::object:
@@ -67,8 +71,10 @@ value::value(value_type type) :
 		case value_type::null:
 		case value_type::boolean:
 			break;
-		case value_type::string:
 		case value_type::number:
+			new(&this->var.number)string_number();
+			break;
+		case value_type::string:
 			new(&this->var.string)std::string();
 			break;
 		case value_type::object:
@@ -86,6 +92,12 @@ value::value(std::string&& str) :
 	new(&this->var.string)std::string(std::move(str));
 }
 
+value::value(string_number&& n) :
+		stored_type(value_type::number)
+{
+	new(&this->var.number)string_number(std::move(n));
+}
+
 value::value(bool b) :
 		stored_type(value_type::boolean)
 {
@@ -97,8 +109,10 @@ value::~value()noexcept{
 		case value_type::null:
 		case value_type::boolean:
 			break;
-		case value_type::string:
 		case value_type::number:
+			this->var.number.~string_number();
+			break;
+		case value_type::string:
 			this->var.string.~basic_string<char>();
 			break;
 		case value_type::object:
@@ -212,7 +226,20 @@ struct dom_parser : public parser{
 	}
 
 	void on_number_parsed(utki::span<const char> str)override{
-		// TODO:
+		ASSERT(!this->stack.empty())
+		auto back = this->stack.back();
+		switch(back->type()){
+			case value_type::array:
+				back->array().emplace_back(string_number(utki::make_string(str)));
+				break;
+			case value_type::object:
+				back->object()[this->key] = value(string_number(utki::make_string(str)));
+				this->key.clear();
+				break;
+			default:
+				ASSERT(false)
+				break;
+		}
 	}
 
 	void on_boolean_parsed(bool b){
@@ -306,7 +333,7 @@ void write_internal(papki::file& fi, const jsondom::value& v){
 			}
 			break;
 		case value_type::number:
-			//TODO:
+			fi.write(utki::make_span(v.number().get_string()));
 			break;
 		case value_type::string:
 			fi.write(double_quote);
@@ -350,3 +377,137 @@ void jsondom::write(papki::file& fi, const jsondom::value& v){
 
 	write_internal(fi, v);
 }
+
+string_number::string_number(int value) :
+		string([](int value) -> std::string{
+			// TRACE(<< "string_number::string_number(int): value = " << value << std::endl)
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%d", value);
+
+			if(0 <= res && res <= int(sizeof(buf))){
+				return std::string(buf, res);
+			}
+			return std::string();
+		}(value))
+{}
+
+string_number::string_number(unsigned char value) :
+		string_number((unsigned short int)value)
+{}
+
+string_number::string_number(unsigned short int value) :
+		string_number((unsigned int)value)
+{}
+
+string_number::string_number(unsigned int value) :
+		string([](unsigned int value) -> std::string{
+			// TRACE(<< "string_number::string_number(uint): value = " << value <<", base = " << int(conversion_base) << std::endl)
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%u", value);
+
+			if(0 <= res && res <= int(sizeof(buf))){
+				return std::string(buf, res);
+			}
+			return std::string();
+		}(value))
+{}
+
+string_number::string_number(signed long int value) :
+		string([](long int value) -> std::string{
+			// TRACE(<< "string_number::string_number(long int): value = " << value << std::endl)
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%ld", value);
+
+			if(0 <= res && res <= int(sizeof(buf))){
+				return std::string(buf, res);
+			}
+			return std::string();
+		}(value))
+{}
+
+string_number::string_number(unsigned long int value) :
+		string([](unsigned long int value) -> std::string{
+			// TRACE(<< "string_number::string_number(ulong): value = " << value << ", base = " << int(conversion_base) << std::endl)
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%lu", value);
+
+			if(0 <= res && res <= int(sizeof(buf))){
+				return std::string(buf, res);
+			}
+			return std::string();
+		}(value))
+{}
+
+string_number::string_number(signed long long int value) :
+		string([](long long int value) -> std::string{
+			// TRACE(<< "string_number::string_number(long long): value = " << value << std::endl)
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%lld", value);
+
+			if(0 <= res && res <= int(sizeof(buf))){
+				return std::string(buf, res);
+			}
+			return std::string();
+		}(value))
+{}
+
+string_number::string_number(unsigned long long int value) :
+		string([](unsigned long long int value) -> std::string{
+			// TRACE(<< "string_number::string_number(u long long): value = " << value << ", base = " << int(conversion_base) << std::endl)
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%llu", value);
+
+			if(0 <= res && res <= int(sizeof(buf))){
+				return std::string(buf, res);
+			}
+			return std::string();
+		}(value))
+{}
+
+string_number::string_number(float value) :
+		string([](float value) -> std::string{
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%.8G", double(value));
+
+			if(res < 0 || res > int(sizeof(buf))){
+				return std::string();
+			}else{
+				return std::string(buf, res);
+			}
+		}(value))
+{}
+
+string_number::string_number(double value) :
+		string([](double value) -> std::string{
+			char buf[64];
+
+			int res = snprintf(buf, sizeof(buf), "%.17G", value);
+
+			if(res < 0 || res > int(sizeof(buf))){
+				return std::string();
+			}else{
+				return std::string(buf, res);
+			}
+		}(value))
+{}
+
+string_number::string_number(long double value) :
+		string([](long double value) -> std::string{
+			char buf[128];
+
+			int res = snprintf(buf, sizeof(buf), "%.31LG", value);
+
+			if(res < 0 || res > int(sizeof(buf))){
+				return std::string();
+			}else{
+				return std::string(buf, res);
+			}
+		}(value))
+{}
