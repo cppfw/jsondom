@@ -543,7 +543,7 @@ void parser::parse_unicode_char(utki::span<char>::const_iterator& i, utki::span<
 		++this->unicode_char_digit_num;
 
 		if(this->unicode_char_digit_num == 4){
-			auto bytes = unikod::toUtf8(this->unicode_char);
+			auto bytes = unikod::to_utf8(this->unicode_char);
 
 			for(auto c : bytes){
 				if(c == 0){

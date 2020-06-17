@@ -320,6 +320,46 @@ auto word_null = utki::make_span("null");
 }
 
 namespace{
+std::string escape_string(const std::string& str){
+	std::stringstream ss;
+
+	for(auto c : str){
+		switch(c){
+			case '"':
+				ss << '\\' << '"';
+				break;
+			case '\\':
+				ss << '\\' << '\\';
+				break;
+			case '/':
+				ss << '\\' << '/';
+				break;
+			case '\b':
+				ss << '\\' << 'b';
+				break;
+			case '\f':
+				ss << '\\' << 'f';
+				break;
+			case '\n':
+				ss << '\\' << 'n';
+				break;
+			case '\r':
+				ss << '\\' << 'r';
+				break;
+			case '\t':
+				ss << '\\' << 't';
+				break;
+			default:
+				ss << c;
+				break;
+		}
+	}
+
+	return ss.str();
+}
+}
+
+namespace{
 void write_internal(papki::file& fi, const jsondom::value& v){
 	switch(v.type()){
 		case value_type::null:
@@ -336,11 +376,12 @@ void write_internal(papki::file& fi, const jsondom::value& v){
 			fi.write(utki::make_span(v.number().get_string()));
 			break;
 		case value_type::string:
+		{
 			fi.write(double_quote);
-			// TODO: escape needed chars in the string
-			fi.write(utki::make_span(v.string()));
+			fi.write(escape_string(v.string()));
 			fi.write(double_quote);
 			break;
+		}
 		case value_type::array:
 			fi.write(open_square_brace);
 			for(auto i = v.array().begin(); i != v.array().end(); ++i){
@@ -358,8 +399,7 @@ void write_internal(papki::file& fi, const jsondom::value& v){
 					fi.write(comma);
 				}
 				fi.write(double_quote);
-				// TODO: escape needed chars in the string
-				fi.write(utki::make_span(i->first));
+				fi.write(escape_string(i->first));
 				fi.write(double_quote_and_colon);
 				write_internal(fi, i->second);
 			}
