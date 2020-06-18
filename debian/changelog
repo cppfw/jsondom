@@ -1,3 +1,9 @@
+libjsondom (0.1.2) unstable; urgency=medium
+
+  * package for all systems
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 18 Jun 2020 22:59:27 +0300
+
 libjsondom (0.1.1) unstable; urgency=medium
 
   * initial release
