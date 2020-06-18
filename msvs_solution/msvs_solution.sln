@@ -7,20 +7,32 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjsondom", "libjsondom\li
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
+		v142_Debug_MD|x64 = v142_Debug_MD|x64
+		v142_Debug_MD|x86 = v142_Debug_MD|x86
+		v142_Debug_MT|x64 = v142_Debug_MT|x64
+		v142_Debug_MT|x86 = v142_Debug_MT|x86
+		v142_Release_MD|x64 = v142_Release_MD|x64
+		v142_Release_MD|x86 = v142_Release_MD|x86
+		v142_Release_MT|x64 = v142_Release_MT|x64
+		v142_Release_MT|x86 = v142_Release_MT|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Debug|x64.ActiveCfg = Debug|x64
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Debug|x64.Build.0 = Debug|x64
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Debug|x86.ActiveCfg = Debug|Win32
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Debug|x86.Build.0 = Debug|Win32
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Release|x64.ActiveCfg = Release|x64
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Release|x64.Build.0 = Release|x64
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Release|x86.ActiveCfg = Release|Win32
-		{3D043D49-C163-4D34-912C-954FACF524B7}.Release|x86.Build.0 = Release|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MD|x64.ActiveCfg = v142_Debug_MD|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MD|x64.Build.0 = v142_Debug_MD|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MD|x86.ActiveCfg = v142_Debug_MD|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MD|x86.Build.0 = v142_Debug_MD|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MT|x64.ActiveCfg = v142_Debug_MT|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MT|x64.Build.0 = v142_Debug_MT|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MT|x86.ActiveCfg = v142_Debug_MT|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Debug_MT|x86.Build.0 = v142_Debug_MT|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MD|x64.ActiveCfg = v142_Release_MD|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MD|x64.Build.0 = v142_Release_MD|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MD|x86.ActiveCfg = v142_Release_MD|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MD|x86.Build.0 = v142_Release_MD|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MT|x64.ActiveCfg = v142_Release_MT|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MT|x64.Build.0 = v142_Release_MT|x64
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MT|x86.ActiveCfg = v142_Release_MT|Win32
+		{3D043D49-C163-4D34-912C-954FACF524B7}.v142_Release_MT|x86.Build.0 = v142_Release_MT|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
