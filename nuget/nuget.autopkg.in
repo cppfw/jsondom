@@ -13,91 +13,60 @@ configurations {
 
 nuget{
 	nuspec{
-		id = lib%NAME%;
+		id = libjsondom;
 		version : $(version);
-		title: some C++ library;
+		title: JSON C++ library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/igagis/%NAME%/master/LICENSE";
-		projectUrl: "https://github.com/igagis/%NAME%";
-		iconUrl: "https://github.com/igagis/%NAME%/blob/master/logo.svg";
+		licenseUrl: "https://raw.githubusercontent.com/igagis/jsondom/master/LICENSE";
+		projectUrl: "https://github.com/igagis/jsondom";
+		iconUrl: "https://github.com/igagis/jsondom/blob/master/logo.svg";
 		requireLicenseAcceptance:false;
-		summary: some C++ library;
+		summary: JSON parser and DOM C++ library;
 
-		description: @"some C++ library";
+		description: @"JSON parser and DOM C++ library";
 		releaseNotes: "Initial release";
 		copyright: Copyright 2020 Ivan Gagis;
 		tags: { native };
 	}
 	dependencies {
 		packages : {
-			libutki/1.0.30;
-			libpapki/1.0.26;
+			libutki/1.1.93;
+			libpapki/1.0.81;
 		};
 	}
 	files {
 		// this is needed to put headers in the base folder
 		nestedInclude: {
-			#destination = ${d_include}%NAME%;
-			"..\src\%NAME%\**\*.hpp"
+			#destination = ${d_include}jsondom;
+			"..\src\jsondom\**\*.hpp"
 		};
-
-		//==== v140 tools ====
-
-		[x86,v140,release] {
-			lib: ..\msvs_solution\v140_Release\lib%NAME%.lib;
-		}
-		[x86,v140,debug] {
-			lib: ..\msvs_solution\v140_Debug\lib%NAME%.lib;
-		}
-		[x64,v140,release] {
-			lib: ..\msvs_solution\x64\v140_Release\lib%NAME%.lib;
-		}
-		[x64,v140,debug] {
-			lib: ..\msvs_solution\x64\v140_Debug\lib%NAME%.lib;
-		}
-
-		//==== v141 tools ====
-
-		[x86,v141,release] {
-			lib: ..\msvs_solution\v141_Release\lib%NAME%.lib;
-		}
-		[x86,v141,debug] {
-			lib: ..\msvs_solution\v141_Debug\lib%NAME%.lib;
-		}
-		[x64,v141,release] {
-			lib: ..\msvs_solution\x64\v141_Release\lib%NAME%.lib;
-		}
-		[x64,v141,debug] {
-			lib: ..\msvs_solution\x64\v141_Debug\lib%NAME%.lib;
-		}
 
 		//==== v142 tools ====
 
 		[x86,v142,release,MultiThreaded] {
-			lib: ..\msvs_solution\v142_Release_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Release_MT\libjsondom.lib;
 		}
 		[x86,v142,debug,MultiThreadedDebug] {
-			lib: ..\msvs_solution\v142_Debug_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Debug_MT\libjsondom.lib;
 		}
 		[x64,v142,release,MultiThreaded] {
-			lib: ..\msvs_solution\x64\v142_Release_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Release_MT\libjsondom.lib;
 		}
 		[x64,v142,debug,MultiThreadedDebug] {
-			lib: ..\msvs_solution\x64\v142_Debug_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Debug_MT\libjsondom.lib;
 		}
 		[x86,v142,release,MultiThreadedDLL] {
-			lib: ..\msvs_solution\v142_Release_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Release_MD\libjsondom.lib;
 		}
 		[x86,v142,debug,MultiThreadedDebugDLL] {
-			lib: ..\msvs_solution\v142_Debug_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Debug_MD\libjsondom.lib;
 		}
 		[x64,v142,release,MultiThreadedDLL] {
-			lib: ..\msvs_solution\x64\v142_Release_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Release_MD\libjsondom.lib;
 		}
 		[x64,v142,debug,MultiThreadedDebugDLL] {
-			lib: ..\msvs_solution\x64\v142_Debug_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Debug_MD\libjsondom.lib;
 		}
-
 	}
 }
