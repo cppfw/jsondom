@@ -1,3 +1,2 @@
 include ':jsondom'
 include ':app'
-rootProject.name = "My Application"
