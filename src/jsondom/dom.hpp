@@ -189,4 +189,10 @@ inline void write(papki::file&& fi, const value& v){
 
 value read(const papki::file& fi);
 
+value read(const char* str);
+
+inline value read(const std::string& str){
+	return read(str.c_str());
+}
+
 }

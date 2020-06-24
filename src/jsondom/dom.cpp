@@ -2,6 +2,8 @@
 
 #include <utki/string.hpp>
 
+#include <papki/span_file.hpp>
+
 #include "parser.hpp"
 
 using namespace jsondom;
@@ -304,6 +306,19 @@ jsondom::value jsondom::read(const papki::file& fi){
 	}
 
 	return std::move(p.doc.array().front());
+}
+
+jsondom::value jsondom::read(const char* str){
+	if(!str){
+		return {};
+	}
+
+	// TODO: optimize
+	size_t len = strlen(str);
+
+	const papki::span_file fi(utki::make_span(reinterpret_cast<const std::uint8_t*>(str), len));
+
+	return read(fi);
 }
 
 namespace{
