@@ -189,6 +189,10 @@ inline void write(papki::file&& fi, const value& v){
 
 value read(const papki::file& fi);
 
+value read(utki::span<const char> data);
+
+value read(utki::span<const uint8_t> data);
+
 value read(const char* str);
 
 inline value read(const std::string& str){
