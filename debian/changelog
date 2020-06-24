@@ -1,3 +1,9 @@
+libjsondom (0.1.3) unstable; urgency=medium
+
+  * add jsondom::read(std::string) function
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 24 Jun 2020 23:53:32 +0300
+
 libjsondom (0.1.2) unstable; urgency=medium
 
   * package for all systems
