@@ -110,6 +110,30 @@ public:
 		return this->stored_type == V;
 	}
 
+	bool is_null()const noexcept{
+		return this->is<value_type::null>();
+	}
+
+	bool is_boolean()const noexcept{
+		return this->is<value_type::boolean>();
+	}
+
+	bool is_number()const noexcept{
+		return this->is<value_type::number>();
+	}
+
+	bool is_string()const noexcept{
+		return this->is<value_type::string>();
+	}
+
+	bool is_array()const noexcept{
+		return this->is<value_type::array>();
+	}
+
+	bool is_object()const noexcept{
+		return this->is<value_type::object>();
+	}
+
 	bool& boolean(){
 		if(!this->is<value_type::boolean>()){
 			this->throw_access_error(value_type::boolean);
