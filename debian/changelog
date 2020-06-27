@@ -1,3 +1,9 @@
+libjsondom (0.1.5) unstable; urgency=medium
+
+  * add value::is_*() functions
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 28 Jun 2020 01:09:26 +0300
+
 libjsondom (0.1.4) unstable; urgency=medium
 
   * add read(span<char>) function
