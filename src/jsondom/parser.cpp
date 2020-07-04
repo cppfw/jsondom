@@ -3,7 +3,7 @@
 #include <sstream>
 
 #include <utki/string.hpp>
-#include <utki/utf8.hpp>
+#include <utki/unicode.hpp>
 
 #include "malformed_json_error.hpp"
 
