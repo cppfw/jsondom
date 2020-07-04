@@ -1,3 +1,9 @@
+libjsondom (0.1.6) unstable; urgency=medium
+
+  * update to latest libs
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 05 Jul 2020 02:47:43 +0300
+
 libjsondom (0.1.5) unstable; urgency=medium
 
   * add value::is_*() functions
