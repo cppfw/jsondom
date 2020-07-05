@@ -1,3 +1,9 @@
+libjsondom (0.1.7) unstable; urgency=medium
+
+  * do not build for stretch
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 05 Jul 2020 04:57:30 +0300
+
 libjsondom (0.1.6) unstable; urgency=medium
 
   * update to latest libs
