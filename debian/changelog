@@ -1,3 +1,9 @@
+libjsondom (0.1.8) unstable; urgency=medium
+
+  * fix bug with number ended by object end }
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 17 Jul 2020 16:16:50 +0300
+
 libjsondom (0.1.7) unstable; urgency=medium
 
   * do not build for stretch
