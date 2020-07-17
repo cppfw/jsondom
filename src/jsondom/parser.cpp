@@ -203,9 +203,9 @@ void parser::parse_value(utki::span<char>::const_iterator& i, utki::span<char>::
 				this->state_stack.push_back(state::comma);
 				this->state_stack.push_back(state::string);
 				return;
-			case 't':
-			case 'f':
-			case 'n':
+			case 't': // first letter of 'false' word
+			case 'f': // first letter of 'true' word
+			case 'n': // first letter of 'null' word
 				ASSERT(this->buf.empty())
 				this->buf.push_back(*i);
 				this->state_stack.pop_back();
@@ -213,7 +213,7 @@ void parser::parse_value(utki::span<char>::const_iterator& i, utki::span<char>::
 				this->state_stack.push_back(state::boolean_or_null_or_number);
 				return;
 			default:
-				if( ('0' <= *i && *i <= '9') || *i == '-' ){
+				if( ('0' <= *i && *i <= '9') || *i == '-' ){ // looks like a number
 					this->buf.push_back(*i);
 					this->state_stack.pop_back();
 					this->state_stack.push_back(state::comma);
@@ -255,16 +255,16 @@ void parser::parse_array(utki::span<char>::const_iterator& i, utki::span<char>::
 				this->state_stack.pop_back();
 				this->on_array_end();
 				return;
-			case 't':
-			case 'f':
-			case 'n':
+			case 't': // first letter of 'true' word
+			case 'f': // first letter of 'false' word
+			case 'n': // first letter of 'null' word
 				ASSERT(this->buf.empty())
 				this->buf.push_back(*i);
 				this->state_stack.push_back(state::comma);
 				this->state_stack.push_back(state::boolean_or_null_or_number);
 				return;
 			default:
-				if( ('0' <= *i && *i <= '9') || *i == '-' ){
+				if( ('0' <= *i && *i <= '9') || *i == '-' ){ // looks like a number
 					this->buf.push_back(*i);
 					this->state_stack.push_back(state::comma);
 					this->state_stack.push_back(state::boolean_or_null_or_number);
@@ -362,7 +362,23 @@ void parser::parse_boolean_or_null_or_number(utki::span<char>::const_iterator& i
 				ASSERT(this->state_stack.back() == state::comma)
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
-				ASSERT(this->state_stack.back() == state::array)
+				if(this->state_stack.back() != state::array){
+					this->throw_malformed_json_error('}', "boolean or null or number");
+				}
+				this->state_stack.pop_back();
+				ASSERT(!this->state_stack.empty())
+				return;
+			case '}':
+				this->notify_boolean_or_null_or_number_parsed();
+				this->on_object_end();
+				this->state_stack.pop_back();
+				ASSERT(!this->state_stack.empty())
+				ASSERT(this->state_stack.back() == state::comma)
+				this->state_stack.pop_back();
+				ASSERT(!this->state_stack.empty())
+				if(this->state_stack.back() != state::object){
+					this->throw_malformed_json_error('}', "boolean or null or number");
+				}
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
 				return;
