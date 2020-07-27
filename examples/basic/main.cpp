@@ -3,7 +3,12 @@
 
 #include <jsondom/dom.hpp>
 
-const char* json = "{\"key1\": \"value1\", \"key2\": \"value2\"}";
+const char* json = R"qwertyuiop(
+	{
+		"key1": "value1",
+		"key2": "value2"
+	}
+)qwertyuiop";
 
 int main(int c, const char** v){
 	// parse the JSON to DOM
