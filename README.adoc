@@ -26,12 +26,11 @@ JSON parser and DOM in C++ library
 const char* json = "{\"key1\": \"value1\", \"key2\": \"value2\"}";
 
 int main(int c, const char** v){
+	// parse the JSON to DOM
 	auto dom = jsondom::read(json);
 
-	if(!dom.is_object()){
-		std::cout << "parsed JSON document root node is unexpectedly not an object" << std::endl;
-		assert(false);
-	}
+	// check that root node is a JSON object, just to be sure
+	assert(dom.is_object());
 
 	// let's check if there is an expected key1-value1 pair,
 	// but do not fail if there is no such key or value is not of an expected type
