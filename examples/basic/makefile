@@ -8,6 +8,7 @@ this_srcs := $(call prorab-src-dir,.)
 
 this_no_install := true
 
+this_cxxflags += -std=c++11
 this_cxxflags += -I$(d)../../src
 
 this_ldflags += -L$(d)../../src/build
