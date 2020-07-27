@@ -6,6 +6,11 @@
 
 namespace jsondom{
 
+/**
+ * @brief SAX style JSON parser.
+ * One has to subclass this class and override on_*() methods, then call feed() method to
+ * feed data to the parser.
+ */
 class parser{
 	unsigned line = 1;
 
@@ -48,14 +53,71 @@ class parser{
 public:
 	virtual ~parser()noexcept{}
 
+	/**
+	 * @brief Invoked on JSON object start.
+	 * This method is invoked when JSON object start (i.e. '{' symbol)
+	 * has been parsed.
+	 */
 	virtual void on_object_start() = 0;
+
+	/**
+	 * @brief Invoked on JSON object end.
+	 * This method is invoked when JSON object end (i.e. '}' symbol)
+	 * has been parsed.
+	 */
 	virtual void on_object_end() = 0;
+
+	/**
+	 * @brief Invoked on JSON array start.
+	 * This method is invoked when JSON array start (i.e. '[' symbol)
+	 * has been parsed.
+	 */
 	virtual void on_array_start() = 0;
+
+	/**
+	 * @brief Invoked on JSON array end.
+	 * This method is invoked when JSON array end (i.e. ']' symbol)
+	 * has been parsed.
+	 */
 	virtual void on_array_end() = 0;
+
+	/**
+	 * @brief Invoked on key from key-value pair.
+	 * This method is invoked when key from key-value pair has been parsed
+	 * while parsing contents of the JSON object.
+	 */
 	virtual void on_key_parsed(utki::span<const char> str) = 0;
+
+	/**
+	 * @brief Invoked on string value.
+	 * This method is invoked when string value has been parsed.
+	 * It can be either when parsing JSON object's value from one of its
+	 * key-value pairs or it can be during parsing values from JSON array.
+	 */
 	virtual void on_string_parsed(utki::span<const char> str) = 0;
+
+	/**
+	 * @brief Invoked on number value.
+	 * This method is invoked when number value has been parsed.
+	 * It can be either when parsing JSON object's value from one of its
+	 * key-value pairs or it can be during parsing values from JSON array.
+	 */
 	virtual void on_number_parsed(utki::span<const char> str) = 0;
+
+	/**
+	 * @brief Invoked on boolean value.
+	 * This method is invoked when boolean value has been parsed.
+	 * It can be either when parsing JSON object's value from one of its
+	 * key-value pairs or it can be during parsing values from JSON array.
+	 */
 	virtual void on_boolean_parsed(bool b) = 0;
+
+	/**
+	 * @brief Invoked on null value.
+	 * This method is invoked when null value has been parsed.
+	 * It can be either when parsing JSON object's value from one of its
+	 * key-value pairs or it can be during parsing values from JSON array.
+	 */
 	virtual void on_null_parsed() = 0;
 
 	/**
