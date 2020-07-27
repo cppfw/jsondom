@@ -1,4 +1,9 @@
 = jsondom
+
+|====
+| link:https://github.com/igagis/jsondom/releases[image:https://img.shields.io/github/tag/igagis/jsondom.svg[releases]] | link:https://travis-ci.org/igagis/jsondom[image:https://travis-ci.org/igagis/jsondom.svg?branch=master[Travis CI status]] | link:https://ci.appveyor.com/project/igagis/jsondom/branch/master[image:https://ci.appveyor.com/api/projects/status/2go6m5a5cre0ygg0?svg=true[Appveyor build status]]
+|====
+
 JSON parser and DOM in C++ library
 
 == Istallation
