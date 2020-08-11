@@ -1,3 +1,9 @@
+libjsondom (0.1.9) unstable; urgency=medium
+
+  * deploy to raspbian buster
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 11 Aug 2020 15:19:24 +0300
+
 libjsondom (0.1.8) unstable; urgency=medium
 
   * fix bug with number ended by object end }
