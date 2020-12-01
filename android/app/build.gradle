@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "io.github.igagis.myapplication"
+        applicationId "io.github.cppfw.myapplication"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

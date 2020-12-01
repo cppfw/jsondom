@@ -1,7 +1,9 @@
-= jsondom
+:name: jsondom
+
+= {name}
 
 |====
-| link:https://github.com/igagis/jsondom/releases[image:https://img.shields.io/github/tag/igagis/jsondom.svg[releases]] | link:https://travis-ci.org/igagis/jsondom[image:https://travis-ci.org/igagis/jsondom.svg?branch=master[Travis CI status]] | link:https://ci.appveyor.com/project/igagis/jsondom/branch/master[image:https://ci.appveyor.com/api/projects/status/2go6m5a5cre0ygg0?svg=true[Appveyor build status]]
+| link:https://github.com/cppfw/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]] | link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
 |====
 
 JSON parser and DOM in C++ library
@@ -9,7 +11,7 @@ JSON parser and DOM in C++ library
 == Istallation
 :package_name: jsondom
 
-. Setup your OS-preferred package system repo following link:https://github.com/igagis/pravila/blob/master/EnableRepo.adoc[this manual]
+. Setup your OS-preferred package system repo following link:https://github.com/cppfw/wiki/blob/master/EnableRepo.adoc[this manual]
 . Install package
 +
 - **deb** (Linux): `lib{package_name}`

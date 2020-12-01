@@ -1,4 +1,4 @@
-package io.github.igagis.jsondom;
+package io.github.cppfw.jsondom;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("io.github.igagis.jsondom.test", appContext.getPackageName());
+        assertEquals("io.github.cppfw.jsondom.test", appContext.getPackageName());
     }
 }

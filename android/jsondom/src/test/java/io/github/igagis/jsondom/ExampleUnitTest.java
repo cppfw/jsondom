@@ -1,4 +1,4 @@
-package io.github.igagis.jsondom;
+package io.github.cppfw.jsondom;
 
 import org.junit.Test;
 
