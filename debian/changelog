@@ -1,3 +1,9 @@
+libjsondom (0.1.10) unstable; urgency=medium
+
+  * github actions
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 02 Dec 2020 01:13:23 +0200
+
 libjsondom (0.1.9) unstable; urgency=medium
 
   * deploy to raspbian buster
