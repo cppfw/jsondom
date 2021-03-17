@@ -1,3 +1,9 @@
+libjsondom (0.1.11) unstable; urgency=medium
+
+  * msvs: disable whole program optimization
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 17 Mar 2021 03:14:50 +0200
+
 libjsondom (0.1.10) unstable; urgency=medium
 
   * github actions
