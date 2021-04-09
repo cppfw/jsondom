@@ -3,6 +3,8 @@
 
 #include <jsondom/dom.hpp>
 
+#include <utki/debug.hpp>
+
 const char* json = R"qwertyuiop(
 	{
 		"key1": "value1",
@@ -15,7 +17,7 @@ int main(int c, const char** v){
 	auto dom = jsondom::read(json);
 
 	// check that root node is a JSON object, just to be sure
-	assert(dom.is_object());
+	utki::assert(dom.is_object(), SL);
 
 	// let's check if there is an expected key1-value1 pair,
 	// but do not fail if there is no such key or value is not of an expected type

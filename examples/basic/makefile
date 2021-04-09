@@ -1,24 +1,21 @@
 include prorab.mk
 
-this_name := basic
+$(eval $(call prorab-config, ../../config))
 
-this_out_dir := build
+this_name := basic
 
 this_srcs := $(call prorab-src-dir,.)
 
 this_no_install := true
 
-this_cxxflags += -std=c++11
 this_cxxflags += -I$(d)../../src
+this_ldflags += -L$(d)../../src/out/$(c)
 
-this_ldflags += -L$(d)../../src/build
-
-this_ldlibs += -lstdc++
-this_ldlibs += -ljsondom
+this_ldlibs += -ljsondom -lutki
 
 $(eval $(prorab-build-app))
 
 # add dependency on libjsondom
-$(prorab_this_name): $(abspath $(d)../../src/build/libjsondom$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libjsondom$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))

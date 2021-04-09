@@ -4,24 +4,24 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "build_debug",
+			"label": "build_dbg",
 			"type": "shell",
-			"command": "make debug=true autojobs=true",
+			"command": "make config=dbg autojobs=true",
 			"problemMatcher": [
 				"$gcc"
 			]
 		},
 		{
-			"label": "clean",
+			"label": "clean-all",
 			"type": "shell",
-			"command": "make clean",
+			"command": "make clean-all",
 			"problemMatcher": []
 		},
 		{
-			"label": "test_debug",
+			"label": "test_dbg",
 			"type": "shell",
-			"command": "make test debug=true",
-			"dependsOn": "build_debug",
+			"command": "make test config=dbg autojobs=true",
+			"dependsOn": "build_dbg",
 			"problemMatcher": []
 		}
 	]
