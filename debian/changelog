@@ -1,3 +1,9 @@
+libjsondom (0.1.12) unstable; urgency=medium
+
+  * deploy to jfrog
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 09 Apr 2021 12:10:03 +0300
+
 libjsondom (0.1.11) unstable; urgency=medium
 
   * msvs: disable whole program optimization
