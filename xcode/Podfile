@@ -5,7 +5,7 @@ project 'jsondom/jsondom.xcodeproj'
 platform :ios, '8.0'
 
 target "jsondom" do
-	pod 'utki', '>= 1.1.93'
-	pod 'papki', '>= 1.0.82'
+	pod 'utki', '>= 1.1.124'
+	pod 'papki', '>= 1.0.93'
 end
 
