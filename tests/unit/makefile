@@ -6,7 +6,7 @@ this_name := tests
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -ljsondom -lutki
+this_ldlibs += -ljsondom -lutki -ltst
 this_ldflags += -L$(d)../../src/out/$(c)
 
 this_no_install := true
