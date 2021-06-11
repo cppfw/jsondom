@@ -86,7 +86,7 @@ void parser::feed(utki::span<const char> data){
 	}
 }
 
-void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -107,7 +107,7 @@ void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::c
 	}
 }
 
-void parser::parse_object(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_object(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -131,7 +131,7 @@ void parser::parse_object(utki::span<char>::const_iterator& i, utki::span<char>:
 	}
 }
 
-void parser::parse_key(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_key(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -155,7 +155,7 @@ void parser::parse_key(utki::span<char>::const_iterator& i, utki::span<char>::co
 	}
 }
 
-void parser::parse_colon(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_colon(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -176,7 +176,7 @@ void parser::parse_colon(utki::span<char>::const_iterator& i, utki::span<char>::
 	}
 }
 
-void parser::parse_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -227,7 +227,7 @@ void parser::parse_value(utki::span<char>::const_iterator& i, utki::span<char>::
 	}
 }
 
-void parser::parse_array(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -277,7 +277,7 @@ void parser::parse_array(utki::span<char>::const_iterator& i, utki::span<char>::
 	}
 }
 
-void parser::parse_string(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_string(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -297,7 +297,7 @@ void parser::parse_string(utki::span<char>::const_iterator& i, utki::span<char>:
 	}
 }
 
-void parser::parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -335,7 +335,7 @@ void parser::parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::
 	}
 }
 
-void parser::parse_boolean_or_null_or_number(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -498,7 +498,7 @@ void parser::notify_boolean_or_null_or_number_parsed(){
 	this->buf.clear();
 }
 
-void parser::parse_string_escape_sequence(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_string_escape_sequence(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case 'n':
@@ -546,7 +546,7 @@ void parser::parse_string_escape_sequence(utki::span<char>::const_iterator& i, u
 	}
 }
 
-void parser::parse_unicode_char(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_unicode_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->unicode_char_digit_num < 4)
 

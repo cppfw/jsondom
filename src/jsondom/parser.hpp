@@ -30,17 +30,17 @@ class parser{
 
 	std::vector<state> state_stack{state::idle};
 
-	void parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_object(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_array(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_key(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_colon(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_comma(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_string(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_string_escape_sequence(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_unicode_char(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_boolean_or_null_or_number(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_object(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_array(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_key(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_colon(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_comma(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_string(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_string_escape_sequence(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_unicode_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_boolean_or_null_or_number(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 
 	void notify_boolean_or_null_or_number_parsed();
 

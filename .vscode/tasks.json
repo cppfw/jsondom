@@ -9,20 +9,23 @@
 			"command": "make config=dbg autojobs=true",
 			"problemMatcher": [
 				"$gcc"
-			]
+			],
+			"group": "build"
 		},
 		{
 			"label": "clean-all",
 			"type": "shell",
 			"command": "make clean-all",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"group": "build"
 		},
 		{
 			"label": "test_dbg",
 			"type": "shell",
 			"command": "make test config=dbg autojobs=true",
 			"dependsOn": "build_dbg",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"group": "build"
 		}
 	]
 }
