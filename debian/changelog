@@ -1,3 +1,9 @@
+libjsondom (0.1.13) unstable; urgency=medium
+
+  * relink to latest libs
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 24 Jun 2021 17:57:15 +0300
+
 libjsondom (0.1.12) unstable; urgency=medium
 
   * deploy to jfrog
