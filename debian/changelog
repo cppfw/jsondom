@@ -1,3 +1,9 @@
+libjsondom (0.1.15) unstable; urgency=medium
+
+  * use latest make in homebrew formulae
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 11 Aug 2021 15:00:47 +0300
+
 libjsondom (0.1.14) unstable; urgency=medium
 
   * deploy to own repo
