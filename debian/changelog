@@ -1,3 +1,9 @@
+libjsondom (0.1.16) unstable; urgency=medium
+
+  * xcode: static framework
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 08 Nov 2021 16:27:29 +0200
+
 libjsondom (0.1.15) unstable; urgency=medium
 
   * use latest make in homebrew formulae
