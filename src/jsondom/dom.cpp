@@ -316,7 +316,7 @@ jsondom::value jsondom::read(const papki::file& fi){
 
 		while(true){
 			auto res = fi.read(utki::make_span(buf));
-			ASSERT_ALWAYS(res <= buf.size())
+			utki::assert(res <= buf.size(), SL);
 			if(res == 0){
 				break;
 			}
@@ -324,7 +324,7 @@ jsondom::value jsondom::read(const papki::file& fi){
 		}
 	}
 
-	ASSERT_INFO(p.stack.size() == 1, "p.stack.size() = " << p.stack.size())
+	ASSERT(p.stack.size() == 1, [&](auto&o){o << "p.stack.size() = " << p.stack.size();})
 	ASSERT(p.doc.is<value_type::array>())
 
 	if(p.doc.array().empty()){
