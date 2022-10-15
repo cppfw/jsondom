@@ -51,7 +51,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{4b643b3c-8870-43bb-93af-fb6bcdfa0e1e}</ProjectGuid>
     <RootNamespace>unittests</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Debug_MD|Win32'" Label="Configuration">
