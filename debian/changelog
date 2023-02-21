@@ -1,3 +1,9 @@
+libjsondom (0.1.17) unstable; urgency=medium
+
+  * build for ubuntu jammy
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 21 Feb 2023 23:20:57 +0200
+
 libjsondom (0.1.16) unstable; urgency=medium
 
   * xcode: static framework
