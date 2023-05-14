@@ -26,7 +26,9 @@ Description: debugging symbols for libjsondom$(soname) package.
 Package: libjsondom-dev
 Section: libdevel
 Architecture: any
-Depends: libjsondom$(soname) (= ${binary:Version}), libjsondom$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Depends:
+	libpapki-dev,
+	libjsondom$(soname) (= ${binary:Version}), libjsondom$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
 Suggests: libjsondom-doc
 Description: JSON cross-platform C++ library.
  JSON parser and DOM cross-platform C++ library.
