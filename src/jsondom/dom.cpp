@@ -34,6 +34,8 @@ SOFTWARE.
 
 using namespace jsondom;
 
+// TODO: whay does lint on macos complain?
+// NOLINTNEXTLINE(bugprone-exception-escape)
 value::value(value&& v) :
 	stored_type(v.stored_type)
 {
@@ -56,7 +58,6 @@ value::value(value&& v) :
 			new (&this->var.array) decltype(this->var.array)(std::move(v.var.array));
 			break;
 	}
-	v.stored_type = type::null;
 }
 
 void value::init(const value& v)
@@ -145,13 +146,13 @@ value::~value() noexcept
 			this->var.number.~string_number();
 			break;
 		case type::string:
-			this->var.string.~basic_string<char>();
+			this->var.string.~basic_string();
 			break;
 		case type::object:
-			this->var.object.~map<std::string, value>();
+			this->var.object.~map();
 			break;
 		case type::array:
-			this->var.array.~vector<value>();
+			this->var.array.~vector();
 			break;
 	}
 }

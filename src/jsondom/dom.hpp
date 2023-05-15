@@ -54,11 +54,15 @@ enum class type {
  * i.e. in text form. The number can be converted to different integer or floating point
  * number formats.
  */
+// TODO: whay does lint on macos complain?
+// NOLINTNEXTLINE(bugprone-exception-escape)
 class string_number
 {
 	std::string string;
 
 public:
+	// TODO: whay does lint on macos complain?
+	// NOLINTNEXTLINE(bugprone-exception-escape)
 	string_number() = default;
 
 	explicit string_number(std::string&& string) :
@@ -134,7 +138,7 @@ class value
 {
 	void init(const value& v);
 
-	type stored_type;
+	type stored_type{type::null};
 
 	union variant {
 		bool boolean;
@@ -143,17 +147,19 @@ class value
 		std::map<std::string, value> object;
 		string_number number;
 
+		// NOLINTNEXTLINE(modernize-use-equals-default)
 		variant() {}
 
+		// NOLINTNEXTLINE(modernize-use-equals-default)
 		~variant() {}
 	} var;
 
 	void throw_access_error(type tried_access) const;
 
 public:
-	value() :
-		stored_type(type::null)
-	{}
+	// TODO: whay does lint on macos complain?
+	// NOLINTNEXTLINE(bugprone-exception-escape)
+	value() = default;
 
 	value(const value& v);
 	value& operator=(const value& v);
