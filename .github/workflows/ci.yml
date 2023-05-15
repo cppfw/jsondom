@@ -225,7 +225,7 @@ jobs:
         name: cppfw_msys
         url: https://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
-        keys-asc: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
+        key-server: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
         install: myci
     - name: add cppfw pacman msys/mingw repo
       uses: myci-actions/add-pacman-repo@master
@@ -233,7 +233,7 @@ jobs:
         name: cppfw_${{ matrix.repo }}
         url: https://gagis.hopto.org/repo/cppfw/msys2/${{ matrix.repo }}
         shell: 'msys2 {0}'
-        keys-asc: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
+        key-server: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
     - name: git clone
       uses: myci-actions/checkout@master
     - name: prepare pacman package
