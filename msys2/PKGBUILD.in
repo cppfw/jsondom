@@ -31,7 +31,14 @@ groups=()
 
 depends=("${pkgPrefix}utki" "${pkgPrefix}papki")
 
-makedepends=('myci' 'prorab' 'prorab-extra' 'doxygen' "${pkgPrefix}tst")
+makedepends=(
+	'myci'
+	'prorab'
+	'prorab-extra'
+	'doxygen'
+	"${pkgPrefix}clang-tools-extra"
+	"${pkgPrefix}tst"
+)
 checkdepends=('myci')
 optdepends=()
 provides=()
@@ -54,7 +61,7 @@ prepare() {
 
 build() {
 	cd "$rootDir"
-	make autojobs=true
+	make
 }
 
 check() {

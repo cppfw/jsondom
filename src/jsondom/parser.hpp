@@ -30,17 +30,18 @@ SOFTWARE.
 
 #include <utki/span.hpp>
 
-namespace jsondom{
+namespace jsondom {
 
 /**
  * @brief SAX style JSON parser.
  * One has to subclass this class and override on_*() methods, then call feed() method to
  * feed data to the parser.
  */
-class parser{
+class parser
+{
 	unsigned line = 1;
 
-	enum class state{
+	enum class state {
 		idle,
 		object,
 		array,
@@ -76,8 +77,9 @@ class parser{
 	unsigned unicode_char_digit_num;
 
 	void throw_malformed_json_error(char unexpected_char, const std::string& state_name);
+
 public:
-	virtual ~parser()noexcept{}
+	virtual ~parser() noexcept = default;
 
 	/**
 	 * @brief Invoked on JSON object start.
@@ -151,22 +153,24 @@ public:
 	 * @param data - data to be fed to parser.
 	 */
 	void feed(utki::span<const char> data);
-	
+
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::span<uint8_t> data){
+	void feed(const utki::span<uint8_t> data)
+	{
 		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
-	
+
 	/**
 	 * @brief Parse the string.
 	 * @param str - string to parse.
 	 */
-	void feed(const std::string& str){
+	void feed(const std::string& str)
+	{
 		this->feed(utki::make_span(str.c_str(), str.length()));
 	}
 };
 
-}
+} // namespace jsondom

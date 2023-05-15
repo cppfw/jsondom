@@ -4,9 +4,27 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "build_dbg",
+			"label": "build",
 			"type": "shell",
-			"command": "make config=dbg autojobs=true",
+			"command": "make",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build-dbg",
+			"type": "shell",
+			"command": "make config=dbg",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build-asan",
+			"type": "shell",
+			"command": "make config=asan",
 			"problemMatcher": [
 				"$gcc"
 			],
@@ -20,10 +38,33 @@
 			"group": "build"
 		},
 		{
-			"label": "test_dbg",
+			"label": "test_",
 			"type": "shell",
-			"command": "make test config=dbg autojobs=true",
-			"dependsOn": "build_dbg",
+			"command": "make test",
+			"dependsOn": "build",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "test-dbg",
+			"type": "shell",
+			"command": "make test config=dbg",
+			"dependsOn": "build-dbg",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "test-asan",
+			"type": "shell",
+			"command": "make test config=asan",
+			"dependsOn": "build-asan",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "format",
+			"type": "shell",
+			"command": "make apply-format",
 			"problemMatcher": [],
 			"group": "build"
 		}

@@ -6,7 +6,9 @@ Build-Depends: debhelper (>= 9), prorab, prorab-extra,
 		libc6-dev,
 		libutki-dev,
 		libpapki-dev,
-		libtst-dev
+		libtst-dev,
+		clang-format,
+		clang-tidy
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.2
 

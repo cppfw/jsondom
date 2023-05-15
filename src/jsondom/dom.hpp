@@ -26,20 +26,20 @@ SOFTWARE.
 
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include <papki/file.hpp>
 
-namespace jsondom{
+namespace jsondom {
 
 /**
  * @brief Type of the JSON value.
  * JSON specifies only 6 value types, this enumeration
  * lists those 6 types.
  */
-enum class value_type{
+enum class value_json_type {
 	null,
 	boolean,
 	number,
@@ -54,95 +54,113 @@ enum class value_type{
  * i.e. in text form. The number can be converted to different integer or floating point
  * number formats.
  */
-class string_number{
+class string_number
+{
 	std::string string;
-	
+
 public:
-	string_number(){}
+	string_number() = default;
 
 	explicit string_number(std::string&& string) :
-			string(std::move(string))
+		string(std::move(string))
 	{}
 
 	explicit string_number(unsigned char value);
-    explicit string_number(unsigned short int value);
+	explicit string_number(unsigned short int value);
 
-    explicit string_number(signed int value);
-    explicit string_number(unsigned int value);
+	explicit string_number(signed int value);
+	explicit string_number(unsigned int value);
 
-    explicit string_number(signed long int value);
-    explicit string_number(unsigned long int value);
+	explicit string_number(signed long int value);
+	explicit string_number(unsigned long int value);
 
-    explicit string_number(signed long long int value);
-    explicit string_number(unsigned long long int value);
+	explicit string_number(signed long long int value);
+	explicit string_number(unsigned long long int value);
 
-    explicit string_number(float value);
-    explicit string_number(double value);
-    explicit string_number(long double value);
+	explicit string_number(float value);
+	explicit string_number(double value);
+	explicit string_number(long double value);
 
 	/**
 	 * @brief Get the number as a string.
 	 * This method returns the underlying string which holds the number.
 	 */
-	const std::string& get_string()const noexcept{
+	const std::string& get_string() const noexcept
+	{
 		return this->string;
 	}
 
-	int32_t to_int32()const{
-        return int32_t(std::stoi(this->string, nullptr, 0));
-    }
-    uint32_t to_uint32()const{
-        return uint32_t(std::stoul(this->string, nullptr, 0));
-    }
+	int32_t to_int32() const
+	{
+		return int32_t(std::stoi(this->string, nullptr, 0));
+	}
 
-    int64_t to_int64()const{
-        return int64_t(std::stoll(this->string, nullptr, 0));
-    }
-    uint64_t to_uint64()const{
-        return uint64_t(std::stoull(this->string, nullptr, 0));
-    }
+	uint32_t to_uint32() const
+	{
+		return uint32_t(std::stoul(this->string, nullptr, 0));
+	}
 
-    float to_float()const{
-        return std::stof(this->string);
-    }
-    double to_double()const{
-        return std::stod(this->string);
-    }
-    long double to_long_double()const{
-        return std::stold(this->string);
-    }
+	int64_t to_int64() const
+	{
+		return int64_t(std::stoll(this->string, nullptr, 0));
+	}
+
+	uint64_t to_uint64() const
+	{
+		return uint64_t(std::stoull(this->string, nullptr, 0));
+	}
+
+	float to_float() const
+	{
+		return std::stof(this->string);
+	}
+
+	double to_double() const
+	{
+		return std::stod(this->string);
+	}
+
+	long double to_long_double() const
+	{
+		return std::stold(this->string);
+	}
 };
 
 /**
  * @brief JSON value.
  * This class encapsulates the JSON value along with its type.
  */
-class value{
+class value
+{
 	void init(const value& v);
 
-	value_type stored_type;
+	value_json_type stored_type;
 
-	union variant{
+	union variant {
 		bool boolean;
 		std::string string;
 		std::vector<value> array;
 		std::map<std::string, value> object;
 		string_number number;
-		variant(){}
-		~variant(){}
-	}var;
 
-	void throw_access_error(value_type tried_access)const;
+		variant() {}
+
+		~variant() {}
+	} var;
+
+	void throw_access_error(value_json_type tried_access) const;
+
 public:
 	value() :
-			stored_type(value_type::null)
+		stored_type(value_json_type::null)
 	{}
+
 	value(const value& v);
 	value& operator=(const value& v);
 	value(value&& v);
-	~value()noexcept;
+	~value() noexcept;
 
-	value(value_type type);
+	value(value_json_type type);
 
 	value(std::string&& str);
 	value(string_number&& n);
@@ -152,7 +170,8 @@ public:
 	 * @brief Get value type.
 	 * @return value type.
 	 */
-	value_type type()const noexcept{
+	value_json_type type() const noexcept
+	{
 		return this->stored_type;
 	}
 
@@ -161,8 +180,10 @@ public:
 	 * @return true if the value is of the given type.
 	 * @return false otherwise.
 	 */
-	template <value_type V> bool is()const noexcept{
-		return this->stored_type == V;
+	template <value_json_type json_type>
+	bool is() const noexcept
+	{
+		return this->stored_type == json_type;
 	}
 
 	/**
@@ -170,8 +191,9 @@ public:
 	 * @return true if the value is of the null type.
 	 * @return false otherwise.
 	 */
-	bool is_null()const noexcept{
-		return this->is<value_type::null>();
+	bool is_null() const noexcept
+	{
+		return this->is<value_json_type::null>();
 	}
 
 	/**
@@ -179,8 +201,9 @@ public:
 	 * @return true if the value is of the boolean type.
 	 * @return false otherwise.
 	 */
-	bool is_boolean()const noexcept{
-		return this->is<value_type::boolean>();
+	bool is_boolean() const noexcept
+	{
+		return this->is<value_json_type::boolean>();
 	}
 
 	/**
@@ -188,8 +211,9 @@ public:
 	 * @return true if the value is of the number type.
 	 * @return false otherwise.
 	 */
-	bool is_number()const noexcept{
-		return this->is<value_type::number>();
+	bool is_number() const noexcept
+	{
+		return this->is<value_json_type::number>();
 	}
 
 	/**
@@ -197,8 +221,9 @@ public:
 	 * @return true if the value is of the string type.
 	 * @return false otherwise.
 	 */
-	bool is_string()const noexcept{
-		return this->is<value_type::string>();
+	bool is_string() const noexcept
+	{
+		return this->is<value_json_type::string>();
 	}
 
 	/**
@@ -206,8 +231,9 @@ public:
 	 * @return true if the value is of the array type.
 	 * @return false otherwise.
 	 */
-	bool is_array()const noexcept{
-		return this->is<value_type::array>();
+	bool is_array() const noexcept
+	{
+		return this->is<value_json_type::array>();
 	}
 
 	/**
@@ -215,8 +241,9 @@ public:
 	 * @return true if the value is of the object type.
 	 * @return false otherwise.
 	 */
-	bool is_object()const noexcept{
-		return this->is<value_type::object>();
+	bool is_object() const noexcept
+	{
+		return this->is<value_json_type::object>();
 	}
 
 	/**
@@ -224,9 +251,10 @@ public:
 	 * @return reference to the underlying boolean value.
 	 * @throw std::logic_error in case the stored value is not a boolean.
 	 */
-	bool& boolean(){
-		if(!this->is<value_type::boolean>()){
-			this->throw_access_error(value_type::boolean);
+	bool& boolean()
+	{
+		if (!this->is<value_json_type::boolean>()) {
+			this->throw_access_error(value_json_type::boolean);
 		}
 		return this->var.boolean;
 	}
@@ -236,9 +264,10 @@ public:
 	 * @return the copy of underlying boolean value.
 	 * @throw std::logic_error in case the stored value is not a boolean.
 	 */
-	bool boolean()const{
-		if(!this->is<value_type::boolean>()){
-			this->throw_access_error(value_type::boolean);
+	bool boolean() const
+	{
+		if (!this->is<value_json_type::boolean>()) {
+			this->throw_access_error(value_json_type::boolean);
 		}
 		return this->var.boolean;
 	}
@@ -248,9 +277,10 @@ public:
 	 * @return reference to the underlying number value.
 	 * @throw std::logic_error in case the stored value is not a number.
 	 */
-	string_number& number(){
-		if(!this->is<value_type::number>()){
-			this->throw_access_error(value_type::number);
+	string_number& number()
+	{
+		if (!this->is<value_json_type::number>()) {
+			this->throw_access_error(value_json_type::number);
 		}
 		return this->var.number;
 	}
@@ -260,9 +290,10 @@ public:
 	 * @return constant reference to the underlying number value.
 	 * @throw std::logic_error in case the stored value is not a number.
 	 */
-	const string_number& number()const{
-		if(!this->is<value_type::number>()){
-			this->throw_access_error(value_type::number);
+	const string_number& number() const
+	{
+		if (!this->is<value_json_type::number>()) {
+			this->throw_access_error(value_json_type::number);
 		}
 		return this->var.number;
 	}
@@ -272,9 +303,10 @@ public:
 	 * @return reference to the underlying string value.
 	 * @throw std::logic_error in case the stored value is not a string.
 	 */
-	std::string& string(){
-		if(!this->is<value_type::string>()){
-			this->throw_access_error(value_type::string);
+	std::string& string()
+	{
+		if (!this->is<value_json_type::string>()) {
+			this->throw_access_error(value_json_type::string);
 		}
 		return this->var.string;
 	}
@@ -284,9 +316,10 @@ public:
 	 * @return constant reference to the underlying string value.
 	 * @throw std::logic_error in case the stored value is not a string.
 	 */
-	const std::string& string()const{
-		if(!this->is<value_type::string>()){
-			this->throw_access_error(value_type::string);
+	const std::string& string() const
+	{
+		if (!this->is<value_json_type::string>()) {
+			this->throw_access_error(value_json_type::string);
 		}
 		return this->var.string;
 	}
@@ -296,9 +329,10 @@ public:
 	 * @return reference to the underlying array value.
 	 * @throw std::logic_error in case the stored value is not an array.
 	 */
-	decltype(var.array)& array(){
-		if(!this->is<value_type::array>()){
-			this->throw_access_error(value_type::array);
+	decltype(var.array)& array()
+	{
+		if (!this->is<value_json_type::array>()) {
+			this->throw_access_error(value_json_type::array);
 		}
 		return this->var.array;
 	}
@@ -308,9 +342,10 @@ public:
 	 * @return constant reference to the underlying array value.
 	 * @throw std::logic_error in case the stored value is not an array.
 	 */
-	const decltype(var.array)& array()const{
-		if(!this->is<value_type::array>()){
-			this->throw_access_error(value_type::array);
+	const decltype(var.array)& array() const
+	{
+		if (!this->is<value_json_type::array>()) {
+			this->throw_access_error(value_json_type::array);
 		}
 		return this->var.array;
 	}
@@ -320,9 +355,10 @@ public:
 	 * @return reference to the underlying object value.
 	 * @throw std::logic_error in case the stored value is not an object.
 	 */
-	decltype(var.object)& object(){
-		if(!this->is<value_type::object>()){
-			this->throw_access_error(value_type::object);
+	decltype(var.object)& object()
+	{
+		if (!this->is<value_json_type::object>()) {
+			this->throw_access_error(value_json_type::object);
 		}
 		return this->var.object;
 	}
@@ -332,9 +368,10 @@ public:
 	 * @return constant reference to the underlying object value.
 	 * @throw std::logic_error in case the stored value is not an object.
 	 */
-	const decltype(var.object)& object()const{
-		if(!this->is<value_type::object>()){
-			this->throw_access_error(value_type::object);
+	const decltype(var.object)& object() const
+	{
+		if (!this->is<value_json_type::object>()) {
+			this->throw_access_error(value_json_type::object);
 		}
 		return this->var.object;
 	}
@@ -352,7 +389,8 @@ void write(papki::file& fi, const value& v);
  * @param fi - file to write the JSON document to.
  * @param v - root value of the JSON document to write.
  */
-inline void write(papki::file&& fi, const value& v){
+inline void write(papki::file&& fi, const value& v)
+{
 	jsondom::write(fi, v);
 }
 
@@ -389,8 +427,9 @@ value read(const char* str);
  * @param str - string to read the JSON document from.
  * @return the read JSON document.
  */
-inline value read(const std::string& str){
+inline value read(const std::string& str)
+{
 	return read(str.c_str());
 }
 
-}
+} // namespace jsondom

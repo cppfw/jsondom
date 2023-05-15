@@ -35,43 +35,49 @@ SOFTWARE.
 
 using namespace jsondom;
 
-namespace{
-bool is_dec_digit(char c){
+namespace {
+bool is_dec_digit(char c)
+{
 	return '0' <= c && c <= '9';
 }
-}
+} // namespace
 
-namespace{
-bool is_hex_digit(char c){
+namespace {
+bool is_hex_digit(char c)
+{
 	return is_dec_digit(c) || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F');
 }
-}
+} // namespace
 
-namespace{
-uint32_t hex_digit_to_number(char c){
-	if(is_dec_digit(c)){
+namespace {
+uint32_t hex_digit_to_number(char c)
+{
+	if (is_dec_digit(c)) {
 		return c - '0';
 	}
-	if('a' <= c && c <= 'f'){
+	if ('a' <= c && c <= 'f') {
 		return 10 + (c - 'a');
 	}
-	if('A' <= c && c <= 'F'){
+	if ('A' <= c && c <= 'F') {
 		return 10 + (c - 'A');
 	}
 	throw std::logic_error(std::string());
 }
-}
+} // namespace
 
-void parser::throw_malformed_json_error(char unexpected_char, const std::string& state_name){
+void parser::throw_malformed_json_error(char unexpected_char, const std::string& state_name)
+{
 	std::stringstream ss;
-	ss << "unexpected character '" << unexpected_char << "' encountered while in " << state_name << " state, line = " << this->line;
+	ss << "unexpected character '" << unexpected_char << "' encountered while in " << state_name
+	   << " state, line = " << this->line;
 	throw malformed_json_error(ss.str());
 }
 
-void parser::feed(utki::span<const char> data){
-	for(auto i = data.begin(), e = data.end(); i != e; ++i){
+void parser::feed(utki::span<const char> data)
+{
+	for (auto i = data.begin(), e = data.end(); i != e; ++i) {
 		ASSERT(!this->state_stack.empty())
-		switch(this->state_stack.back()){
+		switch (this->state_stack.back()) {
 			case state::idle:
 				this->parse_idle(i, e);
 				break;
@@ -106,16 +112,17 @@ void parser::feed(utki::span<const char> data){
 				this->parse_boolean_or_null_or_number(i, e);
 				break;
 		}
-		if(i == e){
+		if (i == e) {
 			return;
 		}
 	}
 }
 
-void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -133,10 +140,11 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 	}
 }
 
-void parser::parse_object(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_object(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -157,9 +165,10 @@ void parser::parse_object(utki::span<const char>::iterator& i, utki::span<const 
 	}
 }
 
-void parser::parse_key(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_key(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -181,10 +190,11 @@ void parser::parse_key(utki::span<const char>::iterator& i, utki::span<const cha
 	}
 }
 
-void parser::parse_colon(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_colon(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -202,10 +212,11 @@ void parser::parse_colon(utki::span<const char>::iterator& i, utki::span<const c
 	}
 }
 
-void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -239,13 +250,13 @@ void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const c
 				this->state_stack.push_back(state::boolean_or_null_or_number);
 				return;
 			default:
-				if( ('0' <= *i && *i <= '9') || *i == '-' ){ // looks like a number
+				if (('0' <= *i && *i <= '9') || *i == '-') { // looks like a number
 					this->buf.push_back(*i);
 					this->state_stack.pop_back();
 					this->state_stack.push_back(state::comma);
 					this->state_stack.push_back(state::boolean_or_null_or_number);
 					return;
-				}else{
+				} else {
 					this->throw_malformed_json_error(*i, "value");
 				}
 				break;
@@ -253,10 +264,11 @@ void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const c
 	}
 }
 
-void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -290,12 +302,12 @@ void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const c
 				this->state_stack.push_back(state::boolean_or_null_or_number);
 				return;
 			default:
-				if( ('0' <= *i && *i <= '9') || *i == '-' ){ // looks like a number
+				if (('0' <= *i && *i <= '9') || *i == '-') { // looks like a number
 					this->buf.push_back(*i);
 					this->state_stack.push_back(state::comma);
 					this->state_stack.push_back(state::boolean_or_null_or_number);
 					return;
-				}else{
+				} else {
 					this->throw_malformed_json_error(*i, "array");
 				}
 				break;
@@ -303,9 +315,10 @@ void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const c
 	}
 }
 
-void parser::parse_string(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_string(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			default:
@@ -323,10 +336,11 @@ void parser::parse_string(utki::span<const char>::iterator& i, utki::span<const 
 	}
 }
 
-void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -339,7 +353,7 @@ void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const c
 			case '}':
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
-				if(this->state_stack.back() != state::object){
+				if (this->state_stack.back() != state::object) {
 					this->throw_malformed_json_error(*i, "comma");
 				}
 				this->state_stack.pop_back();
@@ -348,7 +362,7 @@ void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const c
 			case ']':
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
-				if(this->state_stack.back() != state::array){
+				if (this->state_stack.back() != state::array) {
 					this->throw_malformed_json_error(*i, "comma");
 				}
 				this->state_stack.pop_back();
@@ -361,9 +375,10 @@ void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const c
 	}
 }
 
-void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case '\r':
@@ -388,7 +403,7 @@ void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i
 				ASSERT(this->state_stack.back() == state::comma)
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
-				if(this->state_stack.back() != state::array){
+				if (this->state_stack.back() != state::array) {
 					this->throw_malformed_json_error('}', "boolean or null or number");
 				}
 				this->state_stack.pop_back();
@@ -402,7 +417,7 @@ void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i
 				ASSERT(this->state_stack.back() == state::comma)
 				this->state_stack.pop_back();
 				ASSERT(!this->state_stack.empty())
-				if(this->state_stack.back() != state::object){
+				if (this->state_stack.back() != state::object) {
 					this->throw_malformed_json_error('}', "boolean or null or number");
 				}
 				this->state_stack.pop_back();
@@ -415,9 +430,10 @@ void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i
 	}
 }
 
-namespace{
-bool is_valid_number_string(const std::string& s){
-	enum class state{
+namespace {
+bool is_valid_number_string(const std::string& s)
+{
+	enum class state {
 		idle,
 		sign,
 		integer,
@@ -427,106 +443,106 @@ bool is_valid_number_string(const std::string& s){
 		exponent_sign,
 		exponent_integer
 	} cur_state = state::idle;
-	
-	for(auto c : s){
-		switch(cur_state){
+
+	for (auto c : s) {
+		switch (cur_state) {
 			case state::idle:
-				if(c == '-'){
+				if (c == '-') {
 					cur_state = state::sign; // sign parsed
 					break;
-				}else if(is_dec_digit(c)){
+				} else if (is_dec_digit(c)) {
 					cur_state = state::integer;
 					break;
 				}
 				return false;
 			case state::sign:
-				if(is_dec_digit(c)){
+				if (is_dec_digit(c)) {
 					cur_state = state::integer;
 					break;
 				}
 				return false;
 			case state::integer:
-				if(is_dec_digit(c)){
+				if (is_dec_digit(c)) {
 					break;
-				}else if(c == '.'){
+				} else if (c == '.') {
 					cur_state = state::dot; // dot parsed
 					break;
-				}else if(c == 'e' || c == 'E'){
+				} else if (c == 'e' || c == 'E') {
 					cur_state = state::exponent; // exponent parsed
 					break;
 				}
 				return false;
 			case state::dot:
-				if(is_dec_digit(c)){
+				if (is_dec_digit(c)) {
 					cur_state = state::fraction;
 					break;
 				}
 				return false;
 			case state::fraction:
-				if(is_dec_digit(c)){
+				if (is_dec_digit(c)) {
 					break;
-				}else if(c == 'e' || c == 'E'){
+				} else if (c == 'e' || c == 'E') {
 					cur_state = state::exponent; // exponent parsed
 					break;
 				}
 				return false;
 			case state::exponent:
-				if(c == '-' || c == '+'){
+				if (c == '-' || c == '+') {
 					cur_state = state::exponent_sign; // exponent sign parsed
 					break;
-				}else if(is_dec_digit(c)){
+				} else if (is_dec_digit(c)) {
 					cur_state = state::exponent_integer;
 					break;
 				}
 				return false;
 			case state::exponent_sign:
-				if(is_dec_digit(c)){
+				if (is_dec_digit(c)) {
 					cur_state = state::exponent_integer;
 					break;
 				}
 				return false;
 			case state::exponent_integer:
-				if(is_dec_digit(c)){
+				if (is_dec_digit(c)) {
 					break;
 				}
 				return false;
 		}
 	}
 
-	if(cur_state == state::sign
-			|| cur_state == state::dot
-			|| cur_state == state::exponent
-			|| cur_state == state::exponent_sign
-		)
+	if (cur_state == state::sign || cur_state == state::dot || cur_state == state::exponent
+		|| cur_state == state::exponent_sign)
 	{
 		return false;
 	}
 
 	return true;
 }
-}
+} // namespace
 
-void parser::notify_boolean_or_null_or_number_parsed(){
+void parser::notify_boolean_or_null_or_number_parsed()
+{
 	auto s = utki::make_string(this->buf);
-	if(s == "true"){
+	if (s == "true") {
 		this->on_boolean_parsed(true);
-	}else if(s == "false"){
+	} else if (s == "false") {
 		this->on_boolean_parsed(false);
-	}else if(s == "null"){
+	} else if (s == "null") {
 		this->on_null_parsed();
-	}else if(is_valid_number_string(s)){
+	} else if (is_valid_number_string(s)) {
 		this->on_number_parsed(utki::make_span(this->buf));
-	}else{
+	} else {
 		std::stringstream ss;
-		ss << "unexpected string (" << s << ") encountered while parsing boolean or null or number at line " << this->line;
+		ss << "unexpected string (" << s << ") encountered while parsing boolean or null or number at line "
+		   << this->line;
 		throw malformed_json_error(ss.str());
 	}
 	this->buf.clear();
 }
 
-void parser::parse_string_escape_sequence(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_string_escape_sequence(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case 'n':
 				this->buf.push_back('\n');
 				this->state_stack.pop_back();
@@ -572,22 +588,23 @@ void parser::parse_string_escape_sequence(utki::span<const char>::iterator& i, u
 	}
 }
 
-void parser::parse_unicode_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_unicode_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->unicode_char_digit_num < 4)
 
-		if(!is_hex_digit(*i)){
+		if (!is_hex_digit(*i)) {
 			this->throw_malformed_json_error(*i, "unicode character");
 		}
 
 		this->unicode_char |= (hex_digit_to_number(*i) << ((3 - this->unicode_char_digit_num) * 4));
 		++this->unicode_char_digit_num;
 
-		if(this->unicode_char_digit_num == 4){
+		if (this->unicode_char_digit_num == 4) {
 			auto bytes = utki::to_utf8(this->unicode_char);
 
-			for(auto c : bytes){
-				if(c == 0){
+			for (auto c : bytes) {
+				if (c == 0) {
 					break;
 				}
 				this->buf.push_back(c);
