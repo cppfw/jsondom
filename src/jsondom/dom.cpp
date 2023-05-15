@@ -37,46 +37,46 @@ value::value(value&& v) :
 	stored_type(v.stored_type)
 {
 	switch (this->stored_type) {
-		case value_json_type::null:
+		case type::null:
 			return;
-		case value_json_type::boolean:
+		case type::boolean:
 			this->var.boolean = v.var.boolean;
 			break;
-		case value_json_type::number:
+		case type::number:
 			new (&this->var.number) string_number(std::move(v.var.number));
 			break;
-		case value_json_type::string:
+		case type::string:
 			new (&this->var.string) std::string(std::move(v.var.string));
 			break;
-		case value_json_type::object:
+		case type::object:
 			new (&this->var.object) decltype(this->var.object)(std::move(v.var.object));
 			break;
-		case value_json_type::array:
+		case type::array:
 			new (&this->var.array) decltype(this->var.array)(std::move(v.var.array));
 			break;
 	}
-	v.stored_type = value_json_type::null;
+	v.stored_type = type::null;
 }
 
 void value::init(const value& v)
 {
 	this->stored_type = v.stored_type;
 	switch (this->stored_type) {
-		case value_json_type::null:
+		case type::null:
 			break;
-		case value_json_type::boolean:
+		case type::boolean:
 			this->var.boolean = v.var.boolean;
 			break;
-		case value_json_type::number:
+		case type::number:
 			new (&this->var.number) string_number(v.var.number);
 			break;
-		case value_json_type::string:
+		case type::string:
 			new (&this->var.string) std::string(v.var.string);
 			break;
-		case value_json_type::object:
+		case type::object:
 			new (&this->var.object) decltype(this->var.object)(v.var.object);
 			break;
-		case value_json_type::array:
+		case type::array:
 			new (&this->var.array) decltype(this->var.array)(v.var.array);
 			break;
 	}
@@ -94,42 +94,42 @@ value::value(const value& v)
 	this->init(v);
 }
 
-value::value(value_json_type type) :
+value::value(type type) :
 	stored_type(type)
 {
 	switch (this->stored_type) {
-		case value_json_type::null:
-		case value_json_type::boolean:
+		case type::null:
+		case type::boolean:
 			break;
-		case value_json_type::number:
+		case type::number:
 			new (&this->var.number) string_number();
 			break;
-		case value_json_type::string:
+		case type::string:
 			new (&this->var.string) std::string();
 			break;
-		case value_json_type::object:
+		case type::object:
 			new (&this->var.object) decltype(this->var.object)();
 			break;
-		case value_json_type::array:
+		case type::array:
 			new (&this->var.array) decltype(this->var.array)();
 			break;
 	}
 }
 
 value::value(std::string&& str) :
-	stored_type(value_json_type::string)
+	stored_type(type::string)
 {
 	new (&this->var.string) std::string(std::move(str));
 }
 
 value::value(string_number&& n) :
-	stored_type(value_json_type::number)
+	stored_type(type::number)
 {
 	new (&this->var.number) string_number(std::move(n));
 }
 
 value::value(bool b) :
-	stored_type(value_json_type::boolean)
+	stored_type(type::boolean)
 {
 	this->var.boolean = b;
 }
@@ -137,56 +137,56 @@ value::value(bool b) :
 value::~value() noexcept
 {
 	switch (this->stored_type) {
-		case value_json_type::null:
-		case value_json_type::boolean:
+		case type::null:
+		case type::boolean:
 			break;
-		case value_json_type::number:
+		case type::number:
 			this->var.number.~string_number();
 			break;
-		case value_json_type::string:
+		case type::string:
 			this->var.string.~basic_string<char>();
 			break;
-		case value_json_type::object:
+		case type::object:
 			this->var.object.~map<std::string, value>();
 			break;
-		case value_json_type::array:
+		case type::array:
 			this->var.array.~vector<value>();
 			break;
 	}
 }
 
 namespace {
-std::string type_to_name(value_json_type type)
+std::string type_to_name(type type)
 {
 	switch (type) {
-		case value_json_type::null:
+		case type::null:
 			return "null";
-		case value_json_type::boolean:
+		case type::boolean:
 			return "boolean";
-		case value_json_type::number:
+		case type::number:
 			return "number";
-		case value_json_type::string:
+		case type::string:
 			return "string";
-		case value_json_type::object:
+		case type::object:
 			return "object";
-		case value_json_type::array:
+		case type::array:
 			return "array";
 	}
 	return {};
 }
 } // namespace
 
-void value::throw_access_error(value_json_type tried_access) const
+void value::throw_access_error(type tried_access) const
 {
 	std::stringstream ss;
 	ss << "jsondom: could not access " << type_to_name(tried_access) << "value, stored value is of another type ("
-	   << type_to_name(this->type()) << ")";
+	   << type_to_name(this->get_type()) << ")";
 	throw std::logic_error(ss.str());
 }
 
 namespace {
 struct dom_parser : public parser {
-	value doc{value_json_type::array};
+	value doc{type::array};
 
 	std::string key;
 
@@ -196,13 +196,13 @@ struct dom_parser : public parser {
 	{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
-		switch (back->type()) {
-			case value_json_type::array:
-				back->array().emplace_back(value_json_type::object);
+		switch (back->get_type()) {
+			case type::array:
+				back->array().emplace_back(type::object);
 				this->stack.push_back(&back->array().back());
 				break;
-			case value_json_type::object:
-				back->object()[this->key] = value(value_json_type::object);
+			case type::object:
+				back->object()[this->key] = value(type::object);
 				this->stack.push_back(&back->object()[this->key]);
 				this->key.clear();
 				break;
@@ -221,13 +221,13 @@ struct dom_parser : public parser {
 	{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
-		switch (back->type()) {
-			case value_json_type::array:
-				back->array().emplace_back(value_json_type::array);
+		switch (back->get_type()) {
+			case type::array:
+				back->array().emplace_back(type::array);
 				this->stack.push_back(&back->array().back());
 				break;
-			case value_json_type::object:
-				back->object()[this->key] = value(value_json_type::array);
+			case type::object:
+				back->object()[this->key] = value(type::array);
 				this->stack.push_back(&back->object()[this->key]);
 				this->key.clear();
 				break;
@@ -251,11 +251,11 @@ struct dom_parser : public parser {
 	{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
-		switch (back->type()) {
-			case value_json_type::array:
+		switch (back->get_type()) {
+			case type::array:
 				back->array().emplace_back(utki::make_string(str));
 				break;
-			case value_json_type::object:
+			case type::object:
 				back->object()[this->key] = value(utki::make_string(str));
 				this->key.clear();
 				break;
@@ -269,11 +269,11 @@ struct dom_parser : public parser {
 	{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
-		switch (back->type()) {
-			case value_json_type::array:
+		switch (back->get_type()) {
+			case type::array:
 				back->array().emplace_back(string_number(utki::make_string(str)));
 				break;
-			case value_json_type::object:
+			case type::object:
 				back->object()[this->key] = value(string_number(utki::make_string(str)));
 				this->key.clear();
 				break;
@@ -287,11 +287,11 @@ struct dom_parser : public parser {
 	{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
-		switch (back->type()) {
-			case value_json_type::array:
+		switch (back->get_type()) {
+			case type::array:
 				back->array().emplace_back(b);
 				break;
-			case value_json_type::object:
+			case type::object:
 				back->object()[this->key] = value(b);
 				this->key.clear();
 				break;
@@ -305,11 +305,11 @@ struct dom_parser : public parser {
 	{
 		ASSERT(!this->stack.empty())
 		auto back = this->stack.back();
-		switch (back->type()) {
-			case value_json_type::array:
+		switch (back->get_type()) {
+			case type::array:
 				back->array().emplace_back();
 				break;
-			case value_json_type::object:
+			case type::object:
 				back->object()[this->key] = value();
 				this->key.clear();
 				break;
@@ -343,7 +343,7 @@ jsondom::value jsondom::read(const papki::file& fi)
 	ASSERT(p.stack.size() == 1, [&](auto& o) {
 		o << "p.stack.size() = " << p.stack.size();
 	})
-	ASSERT(p.doc.is<value_json_type::array>())
+	ASSERT(p.doc.is<type::array>())
 
 	if (p.doc.array().empty()) {
 		return {};
@@ -435,28 +435,28 @@ std::string escape_string(const std::string& str)
 namespace {
 void write_internal(papki::file& fi, const jsondom::value& v)
 {
-	switch (v.type()) {
-		case value_json_type::null:
+	switch (v.get_type()) {
+		case type::null:
 			fi.write(word_null);
 			break;
-		case value_json_type::boolean:
+		case type::boolean:
 			if (v.boolean()) {
 				fi.write(word_true);
 			} else {
 				fi.write(word_false);
 			}
 			break;
-		case value_json_type::number:
+		case type::number:
 			fi.write(utki::make_span(v.number().get_string()));
 			break;
-		case value_json_type::string:
+		case type::string:
 			{
 				fi.write(double_quote);
 				fi.write(escape_string(v.string()));
 				fi.write(double_quote);
 				break;
 			}
-		case value_json_type::array:
+		case type::array:
 			fi.write(open_square_brace);
 			for (auto i = v.array().begin(); i != v.array().end(); ++i) {
 				if (i != v.array().begin()) {
@@ -466,7 +466,7 @@ void write_internal(papki::file& fi, const jsondom::value& v)
 			}
 			fi.write(close_square_brace);
 			break;
-		case value_json_type::object:
+		case type::object:
 			fi.write(open_curly_brace);
 			for (auto i = v.object().begin(); i != v.object().end(); ++i) {
 				if (i != v.object().begin()) {
@@ -485,7 +485,7 @@ void write_internal(papki::file& fi, const jsondom::value& v)
 
 void jsondom::write(papki::file& fi, const jsondom::value& v)
 {
-	if (!v.is<value_json_type::object>()) {
+	if (!v.is<type::object>()) {
 		throw std::logic_error("tried to write JSON with non-object root element");
 	}
 

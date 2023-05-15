@@ -39,7 +39,7 @@ namespace jsondom {
  * JSON specifies only 6 value types, this enumeration
  * lists those 6 types.
  */
-enum class value_json_type {
+enum class type {
 	null,
 	boolean,
 	number,
@@ -134,7 +134,7 @@ class value
 {
 	void init(const value& v);
 
-	value_json_type stored_type;
+	type stored_type;
 
 	union variant {
 		bool boolean;
@@ -148,11 +148,11 @@ class value
 		~variant() {}
 	} var;
 
-	void throw_access_error(value_json_type tried_access) const;
+	void throw_access_error(type tried_access) const;
 
 public:
 	value() :
-		stored_type(value_json_type::null)
+		stored_type(type::null)
 	{}
 
 	value(const value& v);
@@ -160,7 +160,7 @@ public:
 	value(value&& v);
 	~value() noexcept;
 
-	value(value_json_type type);
+	value(type type);
 
 	value(std::string&& str);
 	value(string_number&& n);
@@ -170,7 +170,7 @@ public:
 	 * @brief Get value type.
 	 * @return value type.
 	 */
-	value_json_type type() const noexcept
+	jsondom::type get_type() const noexcept
 	{
 		return this->stored_type;
 	}
@@ -180,7 +180,7 @@ public:
 	 * @return true if the value is of the given type.
 	 * @return false otherwise.
 	 */
-	template <value_json_type json_type>
+	template <jsondom::type json_type>
 	bool is() const noexcept
 	{
 		return this->stored_type == json_type;
@@ -193,7 +193,7 @@ public:
 	 */
 	bool is_null() const noexcept
 	{
-		return this->is<value_json_type::null>();
+		return this->is<type::null>();
 	}
 
 	/**
@@ -203,7 +203,7 @@ public:
 	 */
 	bool is_boolean() const noexcept
 	{
-		return this->is<value_json_type::boolean>();
+		return this->is<type::boolean>();
 	}
 
 	/**
@@ -213,7 +213,7 @@ public:
 	 */
 	bool is_number() const noexcept
 	{
-		return this->is<value_json_type::number>();
+		return this->is<type::number>();
 	}
 
 	/**
@@ -223,7 +223,7 @@ public:
 	 */
 	bool is_string() const noexcept
 	{
-		return this->is<value_json_type::string>();
+		return this->is<type::string>();
 	}
 
 	/**
@@ -233,7 +233,7 @@ public:
 	 */
 	bool is_array() const noexcept
 	{
-		return this->is<value_json_type::array>();
+		return this->is<type::array>();
 	}
 
 	/**
@@ -243,7 +243,7 @@ public:
 	 */
 	bool is_object() const noexcept
 	{
-		return this->is<value_json_type::object>();
+		return this->is<type::object>();
 	}
 
 	/**
@@ -253,8 +253,8 @@ public:
 	 */
 	bool& boolean()
 	{
-		if (!this->is<value_json_type::boolean>()) {
-			this->throw_access_error(value_json_type::boolean);
+		if (!this->is<type::boolean>()) {
+			this->throw_access_error(type::boolean);
 		}
 		return this->var.boolean;
 	}
@@ -266,8 +266,8 @@ public:
 	 */
 	bool boolean() const
 	{
-		if (!this->is<value_json_type::boolean>()) {
-			this->throw_access_error(value_json_type::boolean);
+		if (!this->is<type::boolean>()) {
+			this->throw_access_error(type::boolean);
 		}
 		return this->var.boolean;
 	}
@@ -279,8 +279,8 @@ public:
 	 */
 	string_number& number()
 	{
-		if (!this->is<value_json_type::number>()) {
-			this->throw_access_error(value_json_type::number);
+		if (!this->is<type::number>()) {
+			this->throw_access_error(type::number);
 		}
 		return this->var.number;
 	}
@@ -292,8 +292,8 @@ public:
 	 */
 	const string_number& number() const
 	{
-		if (!this->is<value_json_type::number>()) {
-			this->throw_access_error(value_json_type::number);
+		if (!this->is<type::number>()) {
+			this->throw_access_error(type::number);
 		}
 		return this->var.number;
 	}
@@ -305,8 +305,8 @@ public:
 	 */
 	std::string& string()
 	{
-		if (!this->is<value_json_type::string>()) {
-			this->throw_access_error(value_json_type::string);
+		if (!this->is<type::string>()) {
+			this->throw_access_error(type::string);
 		}
 		return this->var.string;
 	}
@@ -318,8 +318,8 @@ public:
 	 */
 	const std::string& string() const
 	{
-		if (!this->is<value_json_type::string>()) {
-			this->throw_access_error(value_json_type::string);
+		if (!this->is<type::string>()) {
+			this->throw_access_error(type::string);
 		}
 		return this->var.string;
 	}
@@ -331,8 +331,8 @@ public:
 	 */
 	decltype(var.array)& array()
 	{
-		if (!this->is<value_json_type::array>()) {
-			this->throw_access_error(value_json_type::array);
+		if (!this->is<type::array>()) {
+			this->throw_access_error(type::array);
 		}
 		return this->var.array;
 	}
@@ -344,8 +344,8 @@ public:
 	 */
 	const decltype(var.array)& array() const
 	{
-		if (!this->is<value_json_type::array>()) {
-			this->throw_access_error(value_json_type::array);
+		if (!this->is<type::array>()) {
+			this->throw_access_error(type::array);
 		}
 		return this->var.array;
 	}
@@ -357,8 +357,8 @@ public:
 	 */
 	decltype(var.object)& object()
 	{
-		if (!this->is<value_json_type::object>()) {
-			this->throw_access_error(value_json_type::object);
+		if (!this->is<type::object>()) {
+			this->throw_access_error(type::object);
 		}
 		return this->var.object;
 	}
@@ -370,8 +370,8 @@ public:
 	 */
 	const decltype(var.object)& object() const
 	{
-		if (!this->is<value_json_type::object>()) {
-			this->throw_access_error(value_json_type::object);
+		if (!this->is<type::object>()) {
+			this->throw_access_error(type::object);
 		}
 		return this->var.object;
 	}

@@ -60,6 +60,7 @@ jobs:
           - {os: debian, codename: bullseye, image_owner: , package_type: deb}
           # - {os: debian, codename: bullseye, image_owner: i386/, package_type: deb, labels: [i386,docker]}
           - {os: debian, codename: bullseye, image_owner: arm32v7/, package_type: deb, labels: [arm,docker]}
+          - {os: debian, codename: bullseye, image_owner: arm64v8/, package_type: deb, labels: [arm,docker]}
           - {os: ubuntu, codename: focal, image_owner: , package_type: deb}
           - {os: ubuntu, codename: jammy, image_owner: , package_type: deb}
           # - {os: raspbian, codename: buster, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
@@ -109,6 +110,12 @@ jobs:
     steps:
     - name: git clone
       uses: myci-actions/checkout@master
+    - name: install clang-tidy and clang-format
+      run: |
+        brew install llvm
+        ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format"
+        ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
+        ln -s "$(brew --prefix llvm)/bin/clang-apply-replacements" "/usr/local/bin/clang-apply-replacements"
     - name: add cppfw tap
       run: |
         brew tap cppfw/tap
