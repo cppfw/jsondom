@@ -1,3 +1,9 @@
+libjsondom (0.1.20) unstable; urgency=medium
+
+  * stuff
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 15 May 2023 23:09:19 +0300
+
 libjsondom (0.1.19) unstable; urgency=medium
 
   * fix android deployment
