@@ -157,13 +157,15 @@ class value
 	void throw_access_error(type tried_access) const;
 
 public:
-	// TODO: whay does lint on macos complain?
-	// NOLINTNEXTLINE(bugprone-exception-escape)
 	value() = default;
 
 	value(const value& v);
 	value& operator=(const value& v);
+
+	// TODO: whay does lint on macos complain?
+	// NOLINTNEXTLINE(bugprone-exception-escape)
 	value(value&& v);
+
 	~value() noexcept;
 
 	value(type type);
