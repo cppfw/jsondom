@@ -375,6 +375,8 @@ public:
 		}
 		return this->var.object;
 	}
+
+	std::string to_string() const;
 };
 
 /**
@@ -383,16 +385,6 @@ public:
  * @param v - root value of the JSON document to write.
  */
 void write(papki::file& fi, const value& v);
-
-/**
- * @brief Write the JSON document to a file.
- * @param fi - file to write the JSON document to.
- * @param v - root value of the JSON document to write.
- */
-inline void write(papki::file&& fi, const value& v)
-{
-	jsondom::write(fi, v);
-}
 
 /**
  * @brief Read JSON document from file.

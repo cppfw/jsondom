@@ -27,6 +27,7 @@ SOFTWARE.
 #include "dom.hpp"
 
 #include <papki/span_file.hpp>
+#include <papki/vector_file.hpp>
 #include <utki/string.hpp>
 
 #include "parser.hpp"
@@ -630,3 +631,10 @@ string_number::string_number(long double value) :
 		}
 	}(value))
 {}
+
+std::string value::to_string() const
+{
+	papki::vector_file file;
+	jsondom::write(file, *this);
+	return utki::make_string(file.reset_data());
+}

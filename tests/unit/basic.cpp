@@ -5,6 +5,8 @@
 
 #include <utki/debug.hpp>
 
+using namespace std::string_literals;
+
 namespace{
 tst::set set("basic", [](tst::suite& suite){
 	suite.add(
@@ -38,5 +40,22 @@ tst::set set("basic", [](tst::suite& suite){
 			tst::check_eq(arr[5].number().to_int32(), 13, SL);
 		}
 	);
+
+	suite.add("value_to_string", [](){
+		auto json = jsondom::read(R"qwertyuiop(
+				{
+					"name1": null,
+					"name2" : ["hello", "world", false, true, null, 13]
+				}
+			)qwertyuiop");
+		
+		auto str = json.to_string();
+
+		tst::check_eq(
+			str,
+			R"({"name1":null,"name2":["hello","world",false,true,null,13]})"s,
+			SL
+		);
+	});
 });
 }
