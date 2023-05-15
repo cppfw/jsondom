@@ -1,3 +1,9 @@
+libjsondom (0.1.19) unstable; urgency=medium
+
+  * fix android deployment
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 15 May 2023 18:18:41 +0300
+
 libjsondom (0.1.18) unstable; urgency=medium
 
   * debian: add libpapki-dev dependency
