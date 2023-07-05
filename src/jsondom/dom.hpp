@@ -32,6 +32,7 @@ SOFTWARE.
 #include <vector>
 
 #include <papki/file.hpp>
+#include <utki/types.hpp>
 
 namespace jsondom {
 
@@ -145,6 +146,50 @@ class value
 	using object_type = std::map<std::string, value>;
 
 	using variant_type = std::variant<std::nullptr_t, bool, string_number, std::string, object_type, array_type>;
+
+	// check that variant types order corresponds to type enum order
+	static_assert(
+		std::is_same_v<
+			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::null)>(std::declval<variant_type>())
+			)>::type,
+			std::nullptr_t>,
+		"type of null variant alternative is not std::nullptr_t"
+	);
+	static_assert(
+		std::is_same_v<
+			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::boolean)>(std::declval<variant_type>())
+			)>::type,
+			bool>,
+		"type of boolean variant alternative is not bool"
+	);
+	static_assert(
+		std::is_same_v<
+			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::number)>(std::declval<variant_type>())
+			)>::type,
+			string_number>,
+		"type of number variant alternative is not string_number"
+	);
+	static_assert(
+		std::is_same_v<
+			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::string)>(std::declval<variant_type>())
+			)>::type,
+			std::string>,
+		"type of string variant alternative is not std::string"
+	);
+	static_assert(
+		std::is_same_v<
+			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::object)>(std::declval<variant_type>())
+			)>::type,
+			object_type>,
+		"type of object variant alternative is not object_type"
+	);
+	static_assert(
+		std::is_same_v<
+			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::array)>(std::declval<variant_type>())
+			)>::type,
+			array_type>,
+		"type of array variant alternative is not array_type"
+	);
 
 	variant_type var;
 
