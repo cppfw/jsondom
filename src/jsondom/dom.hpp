@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <map>
 #include <string>
+#include <variant>
 #include <vector>
 
 #include <papki/file.hpp>
@@ -45,7 +46,9 @@ enum class type {
 	number,
 	string,
 	object,
-	array
+	array,
+
+	enum_size
 };
 
 /**
@@ -65,7 +68,7 @@ public:
 	// NOLINTNEXTLINE(bugprone-exception-escape)
 	string_number() = default;
 
-	explicit string_number(std::string&& string) :
+	explicit string_number(std::string string) :
 		string(std::move(string))
 	{}
 
@@ -138,50 +141,39 @@ class value
 {
 	void init(const value& v);
 
-	type stored_type{type::null};
+	using array_type = std::vector<value>;
+	using object_type = std::map<std::string, value>;
 
-	// TODO: why union? Why not std::variant?
-	union variant {
-		bool boolean{};
-		std::string string;
-		std::vector<value> array;
-		std::map<std::string, value> object;
-		string_number number;
+	using variant_type = std::variant<std::nullptr_t, bool, string_number, std::string, object_type, array_type>;
 
-		// NOLINTNEXTLINE(modernize-use-equals-default)
-		variant() {}
-
-		variant(const variant&) = delete;
-		variant& operator=(const variant&) = delete;
-
-		variant(variant&&) = delete;
-		variant& operator=(variant&&) = delete;
-
-		// NOLINTNEXTLINE(modernize-use-equals-default)
-		~variant() {}
-	} var;
+	variant_type var;
 
 	void throw_access_error(type tried_access) const;
 
 public:
 	value() = default;
 
-	value(const value& v);
-	value& operator=(const value& v);
+	value(const value&) = default;
+	value& operator=(const value&) = default;
 
-	// TODO: whay does lint on macos complain?
-	// NOLINTNEXTLINE(bugprone-exception-escape)
-	value(value&& v) noexcept;
-
+	value(value&& v) = default;
 	value& operator=(value&&) = default;
 
-	~value() noexcept;
+	~value() = default;
 
 	value(type type);
 
-	value(std::string&& str);
-	value(string_number&& n);
-	value(bool b);
+	value(std::string str) :
+		var(str)
+	{}
+
+	value(string_number n) :
+		var(n)
+	{}
+
+	value(bool b) :
+		var(b)
+	{}
 
 	/**
 	 * @brief Get value type.
@@ -189,7 +181,8 @@ public:
 	 */
 	jsondom::type get_type() const noexcept
 	{
-		return this->stored_type;
+		ASSERT(this->var.index() < size_t(jsondom::type::enum_size))
+		return jsondom::type(this->var.index());
 	}
 
 	/**
@@ -200,7 +193,7 @@ public:
 	template <jsondom::type json_type>
 	bool is() const noexcept
 	{
-		return this->stored_type == json_type;
+		return this->var.index() == size_t(json_type);
 	}
 
 	/**
@@ -273,8 +266,7 @@ public:
 		if (!this->is<type::boolean>()) {
 			this->throw_access_error(type::boolean);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.boolean;
+		return std::get<bool>(this->var);
 	}
 
 	/**
@@ -287,8 +279,7 @@ public:
 		if (!this->is<type::boolean>()) {
 			this->throw_access_error(type::boolean);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.boolean;
+		return std::get<bool>(this->var);
 	}
 
 	/**
@@ -301,8 +292,7 @@ public:
 		if (!this->is<type::number>()) {
 			this->throw_access_error(type::number);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.number;
+		return std::get<string_number>(this->var);
 	}
 
 	/**
@@ -315,8 +305,7 @@ public:
 		if (!this->is<type::number>()) {
 			this->throw_access_error(type::number);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.number;
+		return std::get<string_number>(this->var);
 	}
 
 	/**
@@ -329,8 +318,7 @@ public:
 		if (!this->is<type::string>()) {
 			this->throw_access_error(type::string);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.string;
+		return std::get<std::string>(this->var);
 	}
 
 	/**
@@ -343,8 +331,7 @@ public:
 		if (!this->is<type::string>()) {
 			this->throw_access_error(type::string);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.string;
+		return std::get<std::string>(this->var);
 	}
 
 	/**
@@ -352,14 +339,12 @@ public:
 	 * @return reference to the underlying array value.
 	 * @throw std::logic_error in case the stored value is not an array.
 	 */
-	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-	decltype(var.array)& array()
+	array_type& array()
 	{
 		if (!this->is<type::array>()) {
 			this->throw_access_error(type::array);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.array;
+		return std::get<array_type>(this->var);
 	}
 
 	/**
@@ -367,14 +352,12 @@ public:
 	 * @return constant reference to the underlying array value.
 	 * @throw std::logic_error in case the stored value is not an array.
 	 */
-	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-	const decltype(var.array)& array() const
+	const array_type& array() const
 	{
 		if (!this->is<type::array>()) {
 			this->throw_access_error(type::array);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.array;
+		return std::get<array_type>(this->var);
 	}
 
 	/**
@@ -382,14 +365,12 @@ public:
 	 * @return reference to the underlying object value.
 	 * @throw std::logic_error in case the stored value is not an object.
 	 */
-	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-	decltype(var.object)& object()
+	object_type& object()
 	{
 		if (!this->is<type::object>()) {
 			this->throw_access_error(type::object);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.object;
+		return std::get<object_type>(this->var);
 	}
 
 	/**
@@ -397,14 +378,12 @@ public:
 	 * @return constant reference to the underlying object value.
 	 * @throw std::logic_error in case the stored value is not an object.
 	 */
-	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-	const decltype(var.object)& object() const
+	const object_type& object() const
 	{
 		if (!this->is<type::object>()) {
 			this->throw_access_error(type::object);
 		}
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
-		return this->var.object;
+		return std::get<object_type>(this->var);
 	}
 
 	std::string to_string() const;

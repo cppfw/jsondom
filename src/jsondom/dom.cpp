@@ -34,133 +34,31 @@ SOFTWARE.
 
 using namespace jsondom;
 
-// TODO: whay does lint on macos complain?
-// NOLINTNEXTLINE(bugprone-exception-escape)
-value::value(value&& v) noexcept :
-	stored_type(v.stored_type)
-{
-	switch (this->stored_type) {
-		case type::null:
-			return;
-		case type::boolean:
-			this->var.boolean = v.var.boolean;
-			break;
-		case type::number:
-			new (&this->var.number) string_number(std::move(v.var.number));
-			break;
-		case type::string:
-			new (&this->var.string) std::string(std::move(v.var.string));
-			break;
-		case type::object:
-			new (&this->var.object) decltype(this->var.object)(std::move(v.var.object));
-			break;
-		case type::array:
-			new (&this->var.array) decltype(this->var.array)(std::move(v.var.array));
-			break;
-	}
-}
-
-void value::init(const value& v)
-{
-	this->stored_type = v.stored_type;
-	switch (this->stored_type) {
-		case type::null:
-			break;
-		case type::boolean:
-			this->var.boolean = v.var.boolean;
-			break;
-		case type::number:
-			new (&this->var.number) string_number(v.var.number);
-			break;
-		case type::string:
-			new (&this->var.string) std::string(v.var.string);
-			break;
-		case type::object:
-			new (&this->var.object) decltype(this->var.object)(v.var.object);
-			break;
-		case type::array:
-			new (&this->var.array) decltype(this->var.array)(v.var.array);
-			break;
-	}
-}
-
-value& value::operator=(const value& v)
-{
-	this->~value();
-	this->init(v);
-	return *this;
-}
-
-value::value(const value& v)
-{
-	this->init(v);
-}
-
-value::value(type type) :
-	stored_type(type)
-{
-	switch (this->stored_type) {
-		case type::null:
-		case type::boolean:
-			break;
-		case type::number:
-			new (&this->var.number) string_number();
-			break;
-		case type::string:
-			new (&this->var.string) std::string();
-			break;
-		case type::object:
-			new (&this->var.object) decltype(this->var.object)();
-			break;
-		case type::array:
-			new (&this->var.array) decltype(this->var.array)();
-			break;
-	}
-}
-
-value::value(std::string&& str) :
-	stored_type(type::string)
-{
-	new (&this->var.string) std::string(std::move(str));
-}
-
-value::value(string_number&& n) :
-	stored_type(type::number)
-{
-	new (&this->var.number) string_number(std::move(n));
-}
-
-value::value(bool b) :
-	stored_type(type::boolean)
-{
-	this->var.boolean = b;
-}
-
-value::~value() noexcept
-{
-	switch (this->stored_type) {
-		case type::null:
-		case type::boolean:
-			break;
-		case type::number:
-			this->var.number.~string_number();
-			break;
-		case type::string:
-			this->var.string.~basic_string();
-			break;
-		case type::object:
-			this->var.object.~map();
-			break;
-		case type::array:
-			this->var.array.~vector();
-			break;
-	}
-}
+value::value(jsondom::type type) :
+	var([type]() {
+		switch (type) {
+			default:
+			case jsondom::type::null:
+				return variant_type(nullptr);
+			case jsondom::type::boolean:
+				return variant_type(false);
+			case jsondom::type::number:
+				return variant_type(string_number(0));
+			case jsondom::type::string:
+				return variant_type(std::string());
+			case jsondom::type::object:
+				return variant_type(object_type());
+			case jsondom::type::array:
+				return variant_type(array_type());
+		}
+	}())
+{}
 
 namespace {
 std::string type_to_name(type type)
 {
 	switch (type) {
+		default:
 		case type::null:
 			return "null";
 		case type::boolean:
@@ -174,7 +72,6 @@ std::string type_to_name(type type)
 		case type::array:
 			return "array";
 	}
-	return {};
 }
 } // namespace
 
@@ -438,6 +335,7 @@ namespace {
 void write_internal(papki::file& fi, const jsondom::value& v)
 {
 	switch (v.get_type()) {
+		default:
 		case type::null:
 			fi.write(word_null);
 			break;
