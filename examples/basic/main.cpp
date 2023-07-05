@@ -5,6 +5,10 @@
 
 #include <utki/debug.hpp>
 
+#ifdef assert
+#	undef assert
+#endif
+
 constexpr const char* json = R"qwertyuiop(
 	{
 		"key1": "value1",

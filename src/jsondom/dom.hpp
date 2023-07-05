@@ -32,6 +32,7 @@ SOFTWARE.
 #include <vector>
 
 #include <papki/file.hpp>
+#include <utki/config.hpp>
 #include <utki/types.hpp>
 
 namespace jsondom {
@@ -140,14 +141,13 @@ public:
  */
 class value
 {
-	void init(const value& v);
-
 	using array_type = std::vector<value>;
 	using object_type = std::map<std::string, value>;
 
 	using variant_type = std::variant<std::nullptr_t, bool, string_number, std::string, object_type, array_type>;
 
 	// check that variant types order corresponds to type enum order
+#if CFG_COMPILER != CFG_COMPILER_MSVC
 	static_assert(
 		std::is_same_v<
 			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::null)>(std::declval<variant_type>())
@@ -190,6 +190,7 @@ class value
 			array_type>,
 		"type of array variant alternative is not array_type"
 	);
+#endif
 
 	variant_type var;
 
