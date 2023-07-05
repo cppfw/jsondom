@@ -1,3 +1,9 @@
+libjsondom (0.1.21) unstable; urgency=medium
+
+  * fix lint issues
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 05 Jul 2023 19:13:33 +0300
+
 libjsondom (0.1.20) unstable; urgency=medium
 
   * stuff
