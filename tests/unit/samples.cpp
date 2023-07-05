@@ -13,7 +13,7 @@ const std::string data_dir = "samples_data/";
 }
 
 namespace{
-tst::set set("samples", [](tst::suite& suite){
+const tst::set set("samples", [](tst::suite& suite){
     std::vector<std::string> files;
 
     {

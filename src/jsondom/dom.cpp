@@ -36,7 +36,7 @@ using namespace jsondom;
 
 // TODO: whay does lint on macos complain?
 // NOLINTNEXTLINE(bugprone-exception-escape)
-value::value(value&& v) :
+value::value(value&& v) noexcept :
 	stored_type(v.stored_type)
 {
 	switch (this->stored_type) {

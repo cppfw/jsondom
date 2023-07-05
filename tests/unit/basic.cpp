@@ -8,7 +8,7 @@
 using namespace std::string_literals;
 
 namespace{
-tst::set set("basic", [](tst::suite& suite){
+const tst::set set("basic", [](tst::suite& suite){
 	suite.add(
 		"parse_json_from_string",
 		[](){

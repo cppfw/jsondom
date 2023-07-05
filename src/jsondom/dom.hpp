@@ -140,8 +140,9 @@ class value
 
 	type stored_type{type::null};
 
+	// TODO: why union? Why not std::variant?
 	union variant {
-		bool boolean;
+		bool boolean{};
 		std::string string;
 		std::vector<value> array;
 		std::map<std::string, value> object;
@@ -149,6 +150,12 @@ class value
 
 		// NOLINTNEXTLINE(modernize-use-equals-default)
 		variant() {}
+
+		variant(const variant&) = delete;
+		variant& operator=(const variant&) = delete;
+
+		variant(variant&&) = delete;
+		variant& operator=(variant&&) = delete;
 
 		// NOLINTNEXTLINE(modernize-use-equals-default)
 		~variant() {}
@@ -164,7 +171,9 @@ public:
 
 	// TODO: whay does lint on macos complain?
 	// NOLINTNEXTLINE(bugprone-exception-escape)
-	value(value&& v);
+	value(value&& v) noexcept;
+
+	value& operator=(value&&) = default;
 
 	~value() noexcept;
 
@@ -264,6 +273,7 @@ public:
 		if (!this->is<type::boolean>()) {
 			this->throw_access_error(type::boolean);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.boolean;
 	}
 
@@ -277,6 +287,7 @@ public:
 		if (!this->is<type::boolean>()) {
 			this->throw_access_error(type::boolean);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.boolean;
 	}
 
@@ -290,6 +301,7 @@ public:
 		if (!this->is<type::number>()) {
 			this->throw_access_error(type::number);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.number;
 	}
 
@@ -303,6 +315,7 @@ public:
 		if (!this->is<type::number>()) {
 			this->throw_access_error(type::number);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.number;
 	}
 
@@ -316,6 +329,7 @@ public:
 		if (!this->is<type::string>()) {
 			this->throw_access_error(type::string);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.string;
 	}
 
@@ -329,6 +343,7 @@ public:
 		if (!this->is<type::string>()) {
 			this->throw_access_error(type::string);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.string;
 	}
 
@@ -337,11 +352,13 @@ public:
 	 * @return reference to the underlying array value.
 	 * @throw std::logic_error in case the stored value is not an array.
 	 */
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 	decltype(var.array)& array()
 	{
 		if (!this->is<type::array>()) {
 			this->throw_access_error(type::array);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.array;
 	}
 
@@ -350,11 +367,13 @@ public:
 	 * @return constant reference to the underlying array value.
 	 * @throw std::logic_error in case the stored value is not an array.
 	 */
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 	const decltype(var.array)& array() const
 	{
 		if (!this->is<type::array>()) {
 			this->throw_access_error(type::array);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.array;
 	}
 
@@ -363,11 +382,13 @@ public:
 	 * @return reference to the underlying object value.
 	 * @throw std::logic_error in case the stored value is not an object.
 	 */
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 	decltype(var.object)& object()
 	{
 		if (!this->is<type::object>()) {
 			this->throw_access_error(type::object);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.object;
 	}
 
@@ -376,11 +397,13 @@ public:
 	 * @return constant reference to the underlying object value.
 	 * @throw std::logic_error in case the stored value is not an object.
 	 */
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 	const decltype(var.object)& object() const
 	{
 		if (!this->is<type::object>()) {
 			this->throw_access_error(type::object);
 		}
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
 		return this->var.object;
 	}
 
