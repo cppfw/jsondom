@@ -73,12 +73,20 @@ class parser
 
 	std::vector<char> buf;
 
-	char32_t unicode_char;
-	unsigned unicode_char_digit_num;
+	char32_t unicode_char = U'0';
+	unsigned unicode_char_digit_num = 0;
 
 	void throw_malformed_json_error(char unexpected_char, const std::string& state_name);
 
 public:
+	parser() = default;
+
+	parser(const parser&) = delete;
+	parser& operator=(const parser&) = delete;
+
+	parser(parser&&) = delete;
+	parser& operator=(parser&&) = delete;
+
 	virtual ~parser() noexcept = default;
 
 	/**
@@ -160,6 +168,7 @@ public:
 	 */
 	void feed(const utki::span<uint8_t> data)
 	{
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
 

@@ -56,10 +56,10 @@ uint32_t hex_digit_to_number(char c)
 		return c - '0';
 	}
 	if ('a' <= c && c <= 'f') {
-		return 10 + (c - 'a');
+		return utki::to_int(utki::integer_base::dec) + (c - 'a');
 	}
 	if ('A' <= c && c <= 'F') {
-		return 10 + (c - 'A');
+		return utki::to_int(utki::integer_base::dec) + (c - 'A');
 	}
 	throw std::logic_error(std::string());
 }

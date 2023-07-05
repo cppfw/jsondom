@@ -29,6 +29,7 @@ SOFTWARE.
 #include <papki/span_file.hpp>
 #include <papki/vector_file.hpp>
 #include <utki/string.hpp>
+#include <utki/util.hpp>
 
 #include "parser.hpp"
 
@@ -227,7 +228,9 @@ jsondom::value jsondom::read(const papki::file& fi)
 	{
 		papki::file::guard file_guard(fi);
 
-		std::array<uint8_t, 4096> buf; // 4k
+		// no need to init read buffer
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
+		std::array<uint8_t, size_t(utki::kilobyte) * 4> buf;
 
 		while (true) {
 			auto res = fi.read(utki::make_span(buf));
@@ -278,16 +281,16 @@ jsondom::value jsondom::read(const char* str)
 }
 
 namespace {
-auto open_curly_brace = utki::make_span("{");
-auto close_curly_brace = utki::make_span("}");
-auto open_square_brace = utki::make_span("[");
-auto close_square_brace = utki::make_span("]");
-auto double_quote = utki::make_span("\"");
-auto double_quote_and_colon = utki::make_span("\":");
-auto comma = utki::make_span(",");
-auto word_true = utki::make_span("true");
-auto word_false = utki::make_span("false");
-auto word_null = utki::make_span("null");
+const auto open_curly_brace = utki::make_span("{");
+const auto close_curly_brace = utki::make_span("}");
+const auto open_square_brace = utki::make_span("[");
+const auto close_square_brace = utki::make_span("]");
+const auto double_quote = utki::make_span("\"");
+const auto double_quote_and_colon = utki::make_span("\":");
+const auto comma = utki::make_span(",");
+const auto word_true = utki::make_span("true");
+const auto word_false = utki::make_span("false");
+const auto word_null = utki::make_span("null");
 } // namespace
 
 namespace {
@@ -397,8 +400,10 @@ void jsondom::write(papki::file& fi, const jsondom::value& v)
 string_number::string_number(int value) :
 	string([](int value) -> std::string {
 		// TRACE(<< "string_number::string_number(int): value = " << value << std::endl)
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%d", value);
 
 		if (0 <= res && res <= int(buf.size())) {
@@ -420,8 +425,10 @@ string_number::string_number(unsigned int value) :
 	string([](unsigned int value) -> std::string {
 		// TRACE(<< "string_number::string_number(uint): value = " << value <<", base = " << int(conversion_base) <<
 		// std::endl)
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%u", value);
 
 		if (0 <= res && res <= int(buf.size())) {
@@ -434,8 +441,10 @@ string_number::string_number(unsigned int value) :
 string_number::string_number(signed long int value) :
 	string([](long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(long int): value = " << value << std::endl)
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%ld", value);
 
 		if (0 <= res && res <= int(buf.size())) {
@@ -449,8 +458,10 @@ string_number::string_number(unsigned long int value) :
 	string([](unsigned long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(ulong): value = " << value << ", base = " << int(conversion_base) <<
 		// std::endl)
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%lu", value);
 
 		if (0 <= res && res <= int(buf.size())) {
@@ -463,8 +474,10 @@ string_number::string_number(unsigned long int value) :
 string_number::string_number(signed long long int value) :
 	string([](long long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(long long): value = " << value << std::endl)
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%lld", value);
 
 		if (0 <= res && res <= int(buf.size())) {
@@ -478,8 +491,10 @@ string_number::string_number(unsigned long long int value) :
 	string([](unsigned long long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(u long long): value = " << value << ", base = " <<
 		// int(conversion_base) << std::endl)
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%llu", value);
 
 		if (0 <= res && res <= int(buf.size())) {
@@ -491,8 +506,10 @@ string_number::string_number(unsigned long long int value) :
 
 string_number::string_number(float value) :
 	string([](float value) -> std::string {
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%.8G", double(value));
 
 		if (res < 0 || res > int(buf.size())) {
@@ -505,8 +522,10 @@ string_number::string_number(float value) :
 
 string_number::string_number(double value) :
 	string([](double value) -> std::string {
-		std::array<char, 64> buf;
+		std::array<char, 64> buf; // NOLINT
 
+		// TODO: use something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%.17G", value);
 
 		if (res < 0 || res > int(buf.size())) {
@@ -519,8 +538,11 @@ string_number::string_number(double value) :
 
 string_number::string_number(long double value) :
 	string([](long double value) -> std::string {
-		std::array<char, 128> buf;
+		constexpr auto buf_len = 128;
+		std::array<char, buf_len> buf{};
 
+		// TODO: use std::to_string() or something else
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%.31LG", value);
 
 		if (res < 0 || res > int(buf.size())) {

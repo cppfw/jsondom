@@ -5,7 +5,7 @@
 
 #include <utki/debug.hpp>
 
-const char* json = R"qwertyuiop(
+constexpr const char* json = R"qwertyuiop(
 	{
 		"key1": "value1",
 		"key2": "value2"
