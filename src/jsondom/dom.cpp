@@ -33,6 +33,10 @@ SOFTWARE.
 
 #include "parser.hpp"
 
+#ifdef assert
+#	undef assert
+#endif
+
 using namespace jsondom;
 
 value::value(jsondom::type type) :

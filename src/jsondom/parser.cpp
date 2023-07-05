@@ -603,6 +603,7 @@ void parser::parse_unicode_char(utki::span<const char>::iterator& i, utki::span<
 		if (this->unicode_char_digit_num == 4) {
 			auto bytes = utki::to_utf8(this->unicode_char);
 
+			// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 			for (auto c : bytes) {
 				if (c == 0) {
 					break;
