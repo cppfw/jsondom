@@ -150,43 +150,43 @@ class value
 #if CFG_COMPILER != CFG_COMPILER_MSVC
 	static_assert(
 		std::is_same_v<
-			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::null)>(std::declval<variant_type>())
-			)>::type,
+			utki::remove_const_reference_t<decltype(std::get<size_t(jsondom::type::null)>(std::declval<variant_type>())
+			)>,
 			std::nullptr_t>,
 		"type of null variant alternative is not std::nullptr_t"
 	);
 	static_assert(
 		std::is_same_v<
-			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::boolean)>(std::declval<variant_type>())
-			)>::type,
+			utki::remove_const_reference_t<
+				decltype(std::get<size_t(jsondom::type::boolean)>(std::declval<variant_type>()))>,
 			bool>,
 		"type of boolean variant alternative is not bool"
 	);
 	static_assert(
 		std::is_same_v<
-			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::number)>(std::declval<variant_type>())
-			)>::type,
+			utki::remove_const_reference_t<decltype(std::get<size_t(jsondom::type::number)>(std::declval<variant_type>()
+			))>,
 			string_number>,
 		"type of number variant alternative is not string_number"
 	);
 	static_assert(
 		std::is_same_v<
-			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::string)>(std::declval<variant_type>())
-			)>::type,
+			utki::remove_const_reference_t<decltype(std::get<size_t(jsondom::type::string)>(std::declval<variant_type>()
+			))>,
 			std::string>,
 		"type of string variant alternative is not std::string"
 	);
 	static_assert(
 		std::is_same_v<
-			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::object)>(std::declval<variant_type>())
-			)>::type,
+			utki::remove_const_reference_t<decltype(std::get<size_t(jsondom::type::object)>(std::declval<variant_type>()
+			))>,
 			object_type>,
 		"type of object variant alternative is not object_type"
 	);
 	static_assert(
 		std::is_same_v<
-			utki::remove_const_reference<decltype(std::get<size_t(jsondom::type::array)>(std::declval<variant_type>())
-			)>::type,
+			utki::remove_const_reference_t<decltype(std::get<size_t(jsondom::type::array)>(std::declval<variant_type>())
+			)>,
 			array_type>,
 		"type of array variant alternative is not array_type"
 	);
