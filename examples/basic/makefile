@@ -8,8 +8,8 @@ this_srcs := $(call prorab-src-dir,.)
 
 this_no_install := true
 
-this_cxxflags += -I$(d)../../src
-this_ldflags += -L$(d)../../src/out/$(c)
+this_cxxflags += -isystem ../../src
+this_ldflags += -L ../../src/out/$(c)
 
 this_ldlibs += -ljsondom -lutki
 
