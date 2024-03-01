@@ -509,8 +509,8 @@ bool is_valid_number_string(const std::string& s)
 		}
 	}
 
-	if (cur_state == state::sign || cur_state == state::dot || cur_state == state::exponent
-		|| cur_state == state::exponent_sign)
+	if (cur_state == state::sign || cur_state == state::dot || cur_state == state::exponent ||
+		cur_state == state::exponent_sign)
 	{
 		return false;
 	}
