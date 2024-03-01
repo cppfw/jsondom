@@ -1,3 +1,9 @@
+libjsondom (0.1.22) unstable; urgency=medium
+
+  * aptian
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 01 Mar 2024 15:31:02 +0200
+
 libjsondom (0.1.21) unstable; urgency=medium
 
   * fix lint issues
