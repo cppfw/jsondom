@@ -59,14 +59,14 @@ enum class type {
  * i.e. in text form. The number can be converted to different integer or floating point
  * number formats.
  */
-// TODO: whay does lint on macos complain?
+// TODO: why does lint on macos complain?
 // NOLINTNEXTLINE(bugprone-exception-escape)
 class string_number
 {
 	std::string string;
 
 public:
-	// TODO: whay does lint on macos complain?
+	// TODO: why does lint on macos complain?
 	// NOLINTNEXTLINE(bugprone-exception-escape)
 	string_number() = default;
 
