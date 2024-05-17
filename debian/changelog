@@ -1,3 +1,9 @@
+libjsondom (0.1.24) unstable; urgency=medium
+
+  * update
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 17 May 2024 21:46:41 +0300
+
 libjsondom (0.1.23) unstable; urgency=medium
 
   * update homebrew packaging
