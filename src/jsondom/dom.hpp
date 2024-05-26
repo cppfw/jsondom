@@ -142,7 +142,7 @@ public:
 class value
 {
 	using array_type = std::vector<value>;
-	using object_type = std::map<std::string, value>;
+	using object_type = std::map<std::string, value, std::less<>>;
 
 	using variant_type = std::variant<std::nullptr_t, bool, string_number, std::string, object_type, array_type>;
 

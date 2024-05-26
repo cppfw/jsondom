@@ -404,7 +404,7 @@ void jsondom::write(papki::file& fi, const jsondom::value& v)
 string_number::string_number(int value) :
 	string([](int value) -> std::string {
 		// TRACE(<< "string_number::string_number(int): value = " << value << std::endl)
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -429,7 +429,7 @@ string_number::string_number(unsigned int value) :
 	string([](unsigned int value) -> std::string {
 		// TRACE(<< "string_number::string_number(uint): value = " << value <<", base = " << int(conversion_base) <<
 		// std::endl)
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -445,7 +445,7 @@ string_number::string_number(unsigned int value) :
 string_number::string_number(signed long int value) :
 	string([](long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(long int): value = " << value << std::endl)
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -462,7 +462,7 @@ string_number::string_number(unsigned long int value) :
 	string([](unsigned long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(ulong): value = " << value << ", base = " << int(conversion_base) <<
 		// std::endl)
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -478,7 +478,7 @@ string_number::string_number(unsigned long int value) :
 string_number::string_number(signed long long int value) :
 	string([](long long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(long long): value = " << value << std::endl)
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -495,7 +495,7 @@ string_number::string_number(unsigned long long int value) :
 	string([](unsigned long long int value) -> std::string {
 		// TRACE(<< "string_number::string_number(u long long): value = " << value << ", base = " <<
 		// int(conversion_base) << std::endl)
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -510,7 +510,7 @@ string_number::string_number(unsigned long long int value) :
 
 string_number::string_number(float value) :
 	string([](float value) -> std::string {
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
@@ -526,7 +526,7 @@ string_number::string_number(float value) :
 
 string_number::string_number(double value) :
 	string([](double value) -> std::string {
-		std::array<char, 64> buf; // NOLINT
+		std::array<char, 64> buf{}; // NOLINT
 
 		// TODO: use something else
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
