@@ -35,8 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\tests\unit\basic.cpp" />
-    <ClCompile Include="..\..\tests\unit\samples.cpp" />
+    <ClCompile Include="..\..\tests\**\*.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

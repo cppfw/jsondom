@@ -317,8 +317,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\jsondom\dom.cpp" />
-    <ClCompile Include="..\..\src\jsondom\parser.cpp" />
+    <ClCompile Include="..\..\src\**\*.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
