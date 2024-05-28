@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 namespace jsondom {
