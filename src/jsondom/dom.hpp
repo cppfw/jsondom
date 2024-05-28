@@ -35,6 +35,8 @@ SOFTWARE.
 #include <utki/config.hpp>
 #include <utki/types.hpp>
 
+#include "string_number.hpp"
+
 namespace jsondom {
 
 /**
@@ -51,88 +53,6 @@ enum class type {
 	array,
 
 	enum_size
-};
-
-/**
- * @brief JSON number value encapsulation.
- * This class encapsulates a number value as it is stored in JSON document,
- * i.e. in text form. The number can be converted to different integer or floating point
- * number formats.
- */
-// TODO: why does lint on macos complain?
-// NOLINTNEXTLINE(bugprone-exception-escape)
-class string_number
-{
-	std::string string;
-
-public:
-	// TODO: why does lint on macos complain?
-	// NOLINTNEXTLINE(bugprone-exception-escape)
-	string_number() = default;
-
-	explicit string_number(std::string string) :
-		string(std::move(string))
-	{}
-
-	explicit string_number(unsigned char value);
-	explicit string_number(unsigned short int value);
-
-	explicit string_number(signed int value);
-	explicit string_number(unsigned int value);
-
-	explicit string_number(signed long int value);
-	explicit string_number(unsigned long int value);
-
-	explicit string_number(signed long long int value);
-	explicit string_number(unsigned long long int value);
-
-	explicit string_number(float value);
-	explicit string_number(double value);
-	explicit string_number(long double value);
-
-	/**
-	 * @brief Get the number as a string.
-	 * This method returns the underlying string which holds the number.
-	 */
-	const std::string& get_string() const noexcept
-	{
-		return this->string;
-	}
-
-	int32_t to_int32() const
-	{
-		return int32_t(std::stoi(this->string, nullptr, 0));
-	}
-
-	uint32_t to_uint32() const
-	{
-		return uint32_t(std::stoul(this->string, nullptr, 0));
-	}
-
-	int64_t to_int64() const
-	{
-		return int64_t(std::stoll(this->string, nullptr, 0));
-	}
-
-	uint64_t to_uint64() const
-	{
-		return uint64_t(std::stoull(this->string, nullptr, 0));
-	}
-
-	float to_float() const
-	{
-		return std::stof(this->string);
-	}
-
-	double to_double() const
-	{
-		return std::stod(this->string);
-	}
-
-	long double to_long_double() const
-	{
-		return std::stold(this->string);
-	}
 };
 
 /**
@@ -195,6 +115,14 @@ class value
 	variant_type var;
 
 	void throw_access_error(type tried_access) const;
+
+	template <jsondom::type json_type>
+	void throw_if_type_is_not() const
+	{
+		if (!this->is<json_type>()) {
+			this->throw_access_error(json_type);
+		}
+	}
 
 public:
 	value() = default;
@@ -309,9 +237,7 @@ public:
 	 */
 	bool& boolean()
 	{
-		if (!this->is<type::boolean>()) {
-			this->throw_access_error(type::boolean);
-		}
+		this->throw_if_type_is_not<type::boolean>();
 		return std::get<bool>(this->var);
 	}
 
@@ -322,9 +248,7 @@ public:
 	 */
 	bool boolean() const
 	{
-		if (!this->is<type::boolean>()) {
-			this->throw_access_error(type::boolean);
-		}
+		this->throw_if_type_is_not<type::boolean>();
 		return std::get<bool>(this->var);
 	}
 
@@ -335,9 +259,7 @@ public:
 	 */
 	string_number& number()
 	{
-		if (!this->is<type::number>()) {
-			this->throw_access_error(type::number);
-		}
+		this->throw_if_type_is_not<type::number>();
 		return std::get<string_number>(this->var);
 	}
 
@@ -348,9 +270,7 @@ public:
 	 */
 	const string_number& number() const
 	{
-		if (!this->is<type::number>()) {
-			this->throw_access_error(type::number);
-		}
+		this->throw_if_type_is_not<type::number>();
 		return std::get<string_number>(this->var);
 	}
 
@@ -361,9 +281,7 @@ public:
 	 */
 	std::string& string()
 	{
-		if (!this->is<type::string>()) {
-			this->throw_access_error(type::string);
-		}
+		this->throw_if_type_is_not<type::string>();
 		return std::get<std::string>(this->var);
 	}
 
@@ -374,9 +292,7 @@ public:
 	 */
 	const std::string& string() const
 	{
-		if (!this->is<type::string>()) {
-			this->throw_access_error(type::string);
-		}
+		this->throw_if_type_is_not<type::string>();
 		return std::get<std::string>(this->var);
 	}
 
@@ -387,9 +303,7 @@ public:
 	 */
 	array_type& array()
 	{
-		if (!this->is<type::array>()) {
-			this->throw_access_error(type::array);
-		}
+		this->throw_if_type_is_not<type::array>();
 		return std::get<array_type>(this->var);
 	}
 
@@ -400,9 +314,7 @@ public:
 	 */
 	const array_type& array() const
 	{
-		if (!this->is<type::array>()) {
-			this->throw_access_error(type::array);
-		}
+		this->throw_if_type_is_not<type::array>();
 		return std::get<array_type>(this->var);
 	}
 
@@ -413,9 +325,7 @@ public:
 	 */
 	object_type& object()
 	{
-		if (!this->is<type::object>()) {
-			this->throw_access_error(type::object);
-		}
+		this->throw_if_type_is_not<type::object>();
 		return std::get<object_type>(this->var);
 	}
 
@@ -426,9 +336,7 @@ public:
 	 */
 	const object_type& object() const
 	{
-		if (!this->is<type::object>()) {
-			this->throw_access_error(type::object);
-		}
+		this->throw_if_type_is_not<type::object>();
 		return std::get<object_type>(this->var);
 	}
 
