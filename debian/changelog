@@ -1,3 +1,9 @@
+libjsondom (0.1.26) unstable; urgency=medium
+
+  * ubuntu noble
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Sep 2024 14:26:06 +0300
+
 libjsondom (0.1.25) unstable; urgency=medium
 
   * use std::less<> in map
