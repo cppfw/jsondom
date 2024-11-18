@@ -18,9 +18,9 @@ nuget{
 		title: JSON C++ library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/cppfw/jsondom/master/LICENSE";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/jsondom/main/LICENSE";
 		projectUrl: "https://github.com/cppfw/jsondom";
-		iconUrl: "https://github.com/cppfw/jsondom/blob/master/logo.svg";
+		iconUrl: "https://github.com/cppfw/jsondom/blob/main/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: JSON parser and DOM C++ library;
 
