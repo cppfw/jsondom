@@ -20,6 +20,7 @@ JSON parser and DOM library in C++.
 - **Nuget** (Windows, Visual Studio): `lib{package_name}`
 - **cocoapods** (iOS, xcode): `{package_name}`
 - **gradle** (Android): `{package_name}`
+- **conan** (multi-OS): `{package_name}`
 
 == Tutorial
 
