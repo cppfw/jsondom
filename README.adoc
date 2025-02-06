@@ -3,13 +3,15 @@
 = {name}
 
 |====
-| link:https://github.com/cppfw/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]] | link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
+| link:https://github.com/cppfw/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]]
+| link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
+| link:https://codecov.io/gh/cppfw/{name}[image:https://codecov.io/gh/cppfw/{name}/branch/main/graph/badge.svg?token=vwqhr1CujV[codecov.io]]
 |====
 
 JSON parser and DOM library in C++.
 
 == Istallation
-:package_name: jsondom
+:package_name: {name}
 
 . Setup your OS-preferred package system repo following link:https://github.com/cppfw/wiki/blob/main/EnableRepo.adoc[this manual]
 . Install package
