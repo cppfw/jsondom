@@ -396,7 +396,7 @@ void jsondom::write(papki::file& fi, const jsondom::value& v)
 		throw std::logic_error("tried to write JSON with non-object root element");
 	}
 
-	papki::file::guard file_guard(fi, papki::file::mode::create);
+	papki::file::guard file_guard(fi, papki::mode::create);
 
 	write_internal(fi, v);
 }
