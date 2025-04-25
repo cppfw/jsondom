@@ -31,15 +31,51 @@ SOFTWARE.
 namespace jsondom {
 
 /**
+ * @brief Basic json error.
+ */
+class error : public std::logic_error
+{
+public:
+	/**
+	 * @brief Constructor.
+	 * @param message - human readable error message.
+	 */
+	error(std::string message) :
+		std::logic_error(message)
+	{}
+};
+
+/**
  * @brief Malformed JSON error.
  * This exception is thrown during JSON parsing in case
  * unexpected characters are encountered.
  */
-class malformed_json_error : public std::invalid_argument
+class malformed_json_error : public error
 {
 public:
-	malformed_json_error(const std::string& message) :
-		std::invalid_argument(message)
+	/**
+	 * @brief Constructor.
+	 * @param message - human readable error message.
+	 */
+	malformed_json_error(std::string message) :
+		error(std::move(message))
+	{}
+};
+
+/**
+ * @brief Unexpected JSON value type error.
+ * This error is thrown when a JSON value is accessed as if it was holding a type which it does not hold.
+ * For example, if a value holds boolean, but is accessed as if it was an array.
+ */
+class unexpected_value_type : public error
+{
+public:
+	/**
+	 * @brief Constructor.
+	 * @param message - human readable error message.
+	 */
+	unexpected_value_type(std::string message) :
+		error(std::move(message))
 	{}
 };
 

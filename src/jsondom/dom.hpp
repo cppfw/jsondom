@@ -35,6 +35,7 @@ SOFTWARE.
 #include <utki/config.hpp>
 #include <utki/types.hpp>
 
+#include "errors.hpp"
 #include "string_number.hpp"
 
 namespace jsondom {
@@ -61,10 +62,24 @@ enum class type {
  */
 class value
 {
+public:
 	using array_type = std::vector<value>;
-	using object_type = std::map<std::string, value, std::less<>>;
 
-	using variant_type = std::variant<std::nullptr_t, bool, string_number, std::string, object_type, array_type>;
+	using object_type = std::map<
+		std::string, //
+		value,
+		std::less<> //
+		>;
+
+private:
+	using variant_type = std::variant<
+		std::nullptr_t, //
+		bool,
+		string_number,
+		std::string,
+		object_type,
+		array_type //
+		>;
 
 	// check that variant types order corresponds to type enum order
 #if CFG_COMPILER != CFG_COMPILER_MSVC
@@ -135,16 +150,43 @@ public:
 
 	~value() = default;
 
+	/**
+	 * @brief Construct default initialized value of a given type.
+	 * The constructed value will hold a default value depending on the type:
+	 * 
+	 *   type:   | value:
+	 *  -------------------
+	 *   null    | nullptr
+	 *   boolean | false
+	 *   number  | 0
+	 *   string  | ""
+	 *   object  | {}
+	 *   array   | []
+	 *   
+	 * @param type - value type.
+	 */
 	value(type type);
 
+	/**
+	 * @brief Construct a string-initialized value.
+	 * @param str - string initializer.
+	 */
 	value(std::string str) :
-		var(str)
+		var(std::move(str))
 	{}
 
-	value(string_number n) :
-		var(n)
+	/**
+	 * @brief Construct a number-initialized value.
+	 * @param num - number initializer.
+	 */
+	value(string_number num) :
+		var(std::move(num))
 	{}
 
+	/**
+	 * @brief Construct a boolean-initialized value.
+	 * @param b - boolean initializer.
+	 */
 	value(bool b) :
 		var(b)
 	{}
@@ -155,7 +197,9 @@ public:
 	 */
 	jsondom::type get_type() const noexcept
 	{
+		ASSERT(!this->var.valueless_by_exception())
 		ASSERT(this->var.index() < size_t(jsondom::type::enum_size))
+		// NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange, "TODO: why does it complain?")
 		return jsondom::type(this->var.index());
 	}
 
@@ -233,7 +277,7 @@ public:
 	/**
 	 * @brief Get boolean value.
 	 * @return reference to the underlying boolean value.
-	 * @throw std::logic_error in case the stored value is not a boolean.
+	 * @throw unexpected_value_type in case the stored value is not a boolean.
 	 */
 	bool& boolean()
 	{
@@ -244,7 +288,7 @@ public:
 	/**
 	 * @brief Get constant boolean value.
 	 * @return the copy of underlying boolean value.
-	 * @throw std::logic_error in case the stored value is not a boolean.
+	 * @throw unexpected_value_type in case the stored value is not a boolean.
 	 */
 	bool boolean() const
 	{
@@ -255,7 +299,7 @@ public:
 	/**
 	 * @brief Get number value.
 	 * @return reference to the underlying number value.
-	 * @throw std::logic_error in case the stored value is not a number.
+	 * @throw unexpected_value_type in case the stored value is not a number.
 	 */
 	string_number& number()
 	{
@@ -266,7 +310,7 @@ public:
 	/**
 	 * @brief Get constant number value.
 	 * @return constant reference to the underlying number value.
-	 * @throw std::logic_error in case the stored value is not a number.
+	 * @throw unexpected_value_type in case the stored value is not a number.
 	 */
 	const string_number& number() const
 	{
@@ -277,7 +321,7 @@ public:
 	/**
 	 * @brief Get string value.
 	 * @return reference to the underlying string value.
-	 * @throw std::logic_error in case the stored value is not a string.
+	 * @throw unexpected_value_type in case the stored value is not a string.
 	 */
 	std::string& string()
 	{
@@ -288,7 +332,7 @@ public:
 	/**
 	 * @brief Get constant string value.
 	 * @return constant reference to the underlying string value.
-	 * @throw std::logic_error in case the stored value is not a string.
+	 * @throw unexpected_value_type in case the stored value is not a string.
 	 */
 	const std::string& string() const
 	{
@@ -299,7 +343,7 @@ public:
 	/**
 	 * @brief Get array value.
 	 * @return reference to the underlying array value.
-	 * @throw std::logic_error in case the stored value is not an array.
+	 * @throw unexpected_value_type in case the stored value is not an array.
 	 */
 	array_type& array()
 	{
@@ -310,7 +354,7 @@ public:
 	/**
 	 * @brief Get constant array value.
 	 * @return constant reference to the underlying array value.
-	 * @throw std::logic_error in case the stored value is not an array.
+	 * @throw unexpected_value_type in case the stored value is not an array.
 	 */
 	const array_type& array() const
 	{
@@ -321,7 +365,7 @@ public:
 	/**
 	 * @brief Get object value.
 	 * @return reference to the underlying object value.
-	 * @throw std::logic_error in case the stored value is not an object.
+	 * @throw unexpected_value_type in case the stored value is not an object.
 	 */
 	object_type& object()
 	{
@@ -332,7 +376,7 @@ public:
 	/**
 	 * @brief Get constant object value.
 	 * @return constant reference to the underlying object value.
-	 * @throw std::logic_error in case the stored value is not an object.
+	 * @throw unexpected_value_type in case the stored value is not an object.
 	 */
 	const object_type& object() const
 	{
@@ -348,7 +392,10 @@ public:
  * @param fi - file to write the JSON document to.
  * @param v - root value of the JSON document to write.
  */
-void write(papki::file& fi, const value& v);
+void write(
+	papki::file& fi, //
+	const value& v
+);
 
 /**
  * @brief Read JSON document from file.

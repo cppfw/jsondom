@@ -48,7 +48,7 @@ public:
 	// NOLINTNEXTLINE(bugprone-exception-escape)
 	string_number() = default;
 
-	explicit string_number(std::string string) :
+	explicit string_number(std::string string) noexcept :
 		string(std::move(string))
 	{}
 

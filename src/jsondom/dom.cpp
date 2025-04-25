@@ -37,6 +37,8 @@ SOFTWARE.
 #	undef assert
 #endif
 
+using namespace std::string_view_literals;
+
 using namespace jsondom;
 
 value::value(jsondom::type type) :
@@ -82,10 +84,15 @@ std::string type_to_name(type type)
 
 void value::throw_access_error(type tried_access) const
 {
-	std::stringstream ss;
-	ss << "jsondom: could not access " << type_to_name(tried_access) << "value, stored value is of another type ("
-	   << type_to_name(this->get_type()) << ")";
-	throw std::logic_error(ss.str());
+	throw unexpected_value_type(
+		utki::cat(
+			"jsondom: could not access "sv, //
+			type_to_name(tried_access),
+			"value, stored value is of another type ("sv,
+			type_to_name(this->get_type()),
+			")"sv
+		)
+	);
 }
 
 namespace {
@@ -339,7 +346,10 @@ std::string escape_string(const std::string& str)
 } // namespace
 
 namespace {
-void write_internal(papki::file& fi, const jsondom::value& v)
+void write_internal(
+	papki::file& fi, //
+	const jsondom::value& v
+)
 {
 	switch (v.get_type()) {
 		default:
@@ -390,13 +400,19 @@ void write_internal(papki::file& fi, const jsondom::value& v)
 }
 } // namespace
 
-void jsondom::write(papki::file& fi, const jsondom::value& v)
+void jsondom::write(
+	papki::file& fi, //
+	const jsondom::value& v
+)
 {
 	if (!v.is<type::object>()) {
 		throw std::logic_error("tried to write JSON with non-object root element");
 	}
 
-	papki::file::guard file_guard(fi, papki::mode::create);
+	papki::file::guard file_guard(
+		fi, //
+		papki::mode::create
+	);
 
 	write_internal(fi, v);
 }

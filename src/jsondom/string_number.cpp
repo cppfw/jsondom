@@ -32,10 +32,9 @@ using namespace jsondom;
 
 string_number::string_number(int value) :
 	string([](int value) -> std::string {
-		// TRACE(<< "string_number::string_number(int): value = " << value << std::endl)
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%d", value);
 
@@ -56,11 +55,9 @@ string_number::string_number(unsigned short int value) :
 
 string_number::string_number(unsigned int value) :
 	string([](unsigned int value) -> std::string {
-		// TRACE(<< "string_number::string_number(uint): value = " << value <<", base = " << int(conversion_base) <<
-		// std::endl)
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%u", value);
 
@@ -73,10 +70,9 @@ string_number::string_number(unsigned int value) :
 
 string_number::string_number(signed long int value) :
 	string([](long int value) -> std::string {
-		// TRACE(<< "string_number::string_number(long int): value = " << value << std::endl)
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%ld", value);
 
@@ -89,11 +85,9 @@ string_number::string_number(signed long int value) :
 
 string_number::string_number(unsigned long int value) :
 	string([](unsigned long int value) -> std::string {
-		// TRACE(<< "string_number::string_number(ulong): value = " << value << ", base = " << int(conversion_base) <<
-		// std::endl)
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%lu", value);
 
@@ -106,10 +100,9 @@ string_number::string_number(unsigned long int value) :
 
 string_number::string_number(signed long long int value) :
 	string([](long long int value) -> std::string {
-		// TRACE(<< "string_number::string_number(long long): value = " << value << std::endl)
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%lld", value);
 
@@ -122,11 +115,9 @@ string_number::string_number(signed long long int value) :
 
 string_number::string_number(unsigned long long int value) :
 	string([](unsigned long long int value) -> std::string {
-		// TRACE(<< "string_number::string_number(u long long): value = " << value << ", base = " <<
-		// int(conversion_base) << std::endl)
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%llu", value);
 
@@ -141,7 +132,7 @@ string_number::string_number(float value) :
 	string([](float value) -> std::string {
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%.8G", double(value));
 
@@ -157,7 +148,7 @@ string_number::string_number(double value) :
 	string([](double value) -> std::string {
 		std::array<char, 64> buf{}; // NOLINT
 
-		// TODO: use something else
+		// TODO: use something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%.17G", value);
 
@@ -174,7 +165,7 @@ string_number::string_number(long double value) :
 		constexpr auto buf_len = 128;
 		std::array<char, buf_len> buf{};
 
-		// TODO: use std::to_string() or something else
+		// TODO: use std::to_string() or something else than snprintf()
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		int res = snprintf(buf.data(), buf.size(), "%.31LG", value);
 
