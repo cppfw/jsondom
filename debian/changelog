@@ -1,3 +1,9 @@
+libjsondom (0.1.29) unstable; urgency=medium
+
+  * add errors
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 26 Apr 2025 14:12:16 +0300
+
 libjsondom (0.1.28) unstable; urgency=medium
 
   * update
