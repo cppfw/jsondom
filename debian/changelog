@@ -1,3 +1,9 @@
+libjsondom (0.1.30) unstable; urgency=medium
+
+  * vcpkg
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 29 Apr 2025 13:28:04 +0300
+
 libjsondom (0.1.29) unstable; urgency=medium
 
   * add errors
