@@ -14,13 +14,14 @@ JSON parser and DOM library in C++.
 . Setup your OS-preferred package system repo following link:https://github.com/cppfw/wiki/blob/main/EnableRepo.adoc[this manual]
 . Install package
 +
+- **vcpkg** (multi-OS): `{package_name}`
+- **conan** (multi-OS): `{package_name}`
 - **deb** (Linux): `lib{package_name}`
 - **homebrew** (MacOS X): `lib{package_name}`
 - **pacman** (Windows, Msys2): `mingw-w64-i686-{package_name}`, `mingw-w64-x86_64-{package_name}`
 - **Nuget** (Windows, Visual Studio): `lib{package_name}`
 - **cocoapods** (iOS, xcode): `{package_name}`
 - **gradle** (Android): `{package_name}`
-- **conan** (multi-OS): `{package_name}`
 
 == Tutorial
 
