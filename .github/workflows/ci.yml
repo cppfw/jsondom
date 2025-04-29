@@ -414,7 +414,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vcpkg_logs
-          path: vcpkg-installation/buildtrees/${{ env.PACKAGE_NAME }}/
+          path: |
+            vcpkg-installation/buildtrees/${{ env.PACKAGE_NAME }}/
+            build/vcpkg/**/*.log
       - name: deploy vcpkg port
         run: |
           myci-deploy-vcpkg.sh --repo cppfw/vcpkg-repo --port-dir build/vcpkg/overlay/${PACKAGE_NAME}
