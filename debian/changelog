@@ -1,3 +1,9 @@
+libjsondom (0.1.31) unstable; urgency=medium
+
+  * cmake: myci
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 18 May 2025 13:30:24 +0300
+
 libjsondom (0.1.30) unstable; urgency=medium
 
   * vcpkg
