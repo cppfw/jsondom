@@ -1,5 +1,7 @@
 #include <jsondom/dom.hpp>
 
+#include <iostream>
+
 int main(int argc, const char** argv){
     auto json = jsondom::read(R"qwe({"hello":"world"})qwe");
 
