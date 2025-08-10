@@ -1,3 +1,9 @@
+libjsondom (0.1.35) unstable; urgency=medium
+
+  * debian trixie build
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 10 Aug 2025 05:03:10 +0300
+
 libjsondom (0.1.34) unstable; urgency=medium
 
   * add debian dbg package
