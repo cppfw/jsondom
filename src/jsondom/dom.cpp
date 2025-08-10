@@ -84,15 +84,13 @@ std::string type_to_name(type type)
 
 void value::throw_access_error(type tried_access) const
 {
-	throw unexpected_value_type(
-		utki::cat(
-			"jsondom: could not access "sv, //
-			type_to_name(tried_access),
-			"value, stored value is of another type ("sv,
-			type_to_name(this->get_type()),
-			")"sv
-		)
-	);
+	throw unexpected_value_type(utki::cat(
+		"jsondom: could not access "sv, //
+		type_to_name(tried_access),
+		"value, stored value is of another type ("sv,
+		type_to_name(this->get_type()),
+		")"sv
+	));
 }
 
 namespace {
