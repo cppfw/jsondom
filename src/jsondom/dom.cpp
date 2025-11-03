@@ -26,8 +26,8 @@ SOFTWARE.
 
 #include "dom.hpp"
 
-#include <papki/span_file.hpp>
-#include <papki/vector_file.hpp>
+#include <fsif/span_file.hpp>
+#include <fsif/vector_file.hpp>
 #include <utki/string.hpp>
 #include <utki/util.hpp>
 
@@ -230,12 +230,12 @@ struct dom_parser : public parser {
 };
 } // namespace
 
-jsondom::value jsondom::read(const papki::file& fi)
+jsondom::value jsondom::read(const fsif::file& fi)
 {
 	dom_parser p;
 
 	{
-		papki::file::guard file_guard(fi);
+		fsif::file::guard file_guard(fi);
 
 		// no need to init read buffer
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
@@ -265,14 +265,14 @@ jsondom::value jsondom::read(const papki::file& fi)
 
 jsondom::value jsondom::read(utki::span<const char> data)
 {
-	const papki::span_file fi(data);
+	const fsif::span_file fi(data);
 
 	return read(fi);
 }
 
 jsondom::value jsondom::read(utki::span<const uint8_t> data)
 {
-	const papki::span_file fi(data);
+	const fsif::span_file fi(data);
 
 	return read(fi);
 }
@@ -345,7 +345,7 @@ std::string escape_string(const std::string& str)
 
 namespace {
 void write_internal(
-	papki::file& fi, //
+	fsif::file& fi, //
 	const jsondom::value& v
 )
 {
@@ -399,7 +399,7 @@ void write_internal(
 } // namespace
 
 void jsondom::write(
-	papki::file& fi, //
+	fsif::file& fi, //
 	const jsondom::value& v
 )
 {
@@ -407,9 +407,9 @@ void jsondom::write(
 		throw std::logic_error("tried to write JSON with non-object root element");
 	}
 
-	papki::file::guard file_guard(
+	fsif::file::guard file_guard(
 		fi, //
-		papki::mode::create
+		fsif::mode::create
 	);
 
 	write_internal(fi, v);
@@ -417,7 +417,7 @@ void jsondom::write(
 
 std::string value::to_string() const
 {
-	papki::vector_file file;
+	fsif::vector_file file;
 	jsondom::write(file, *this);
 	return utki::make_string(file.reset_data());
 }

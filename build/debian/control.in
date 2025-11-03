@@ -5,7 +5,7 @@ Maintainer: Ivan Gagis <igagis@gmail.com>
 Build-Depends: debhelper (>= 9), prorab, prorab-extra,
 		libc6-dev,
 		libutki-dev,
-		libpapki-dev,
+		libfsif-dev,
 		libtst-dev,
 		clang-format,
 		clang-tidy
@@ -46,7 +46,7 @@ Depends:
 	libjsondom$(soname) (= ${binary:Version}),
 	libjsondom-dbg$(soname) (= ${binary:Version}),
 	${misc:Depends},
-	libpapki-dev
+	libfsif-dev
 Suggests: libjsondom-doc
 Description: JSON cross-platform C++ library.
 	JSON parser and DOM cross-platform C++ library.

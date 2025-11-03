@@ -31,7 +31,7 @@ SOFTWARE.
 #include <variant>
 #include <vector>
 
-#include <papki/file.hpp>
+#include <fsif/file.hpp>
 #include <utki/config.hpp>
 #include <utki/types.hpp>
 
@@ -405,7 +405,7 @@ public:
  * @param v - root value of the JSON document to write.
  */
 void write(
-	papki::file& fi, //
+	fsif::file& fi, //
 	const value& v
 );
 
@@ -414,7 +414,7 @@ void write(
  * @param fi - file to read the JSON document from.
  * @return the read JSON document.
  */
-value read(const papki::file& fi);
+value read(const fsif::file& fi);
 
 /**
  * @brief Read JSON document from memory.
