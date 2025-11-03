@@ -1,3 +1,9 @@
+libjsondom (0.1.36) unstable; urgency=medium
+
+  * debian: fix dbgsrc path
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 03 Nov 2025 14:12:34 +0200
+
 libjsondom (0.1.35) unstable; urgency=medium
 
   * debian trixie build
