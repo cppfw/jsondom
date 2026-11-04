@@ -19,7 +19,7 @@ const tst::set set("basic", [](tst::suite& suite){
 				}
 			)qwertyuiop");
 
-			tst::check(json.is<jsondom::type::object>(), SL) << "actual = " << unsigned(json.get_type());
+			tst::check(json.is<jsondom::type::object>(), [&](auto& o){o << "actual = " << unsigned(json.get_type());}, SL);
 			tst::check_eq(json.object().size(), size_t(2), SL);
 			tst::check(json.object()["name1"].is<jsondom::type::null>(), SL);
 			tst::check(json.object()["name2"].is<jsondom::type::array>(), SL);
