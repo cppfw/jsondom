@@ -76,7 +76,7 @@ void parser::throw_malformed_json_error(char unexpected_char, const std::string&
 void parser::feed(utki::span<const char> data)
 {
 	for (auto i = data.begin(), e = data.end(); i != e; ++i) {
-		ASSERT(!this->state_stack.empty())
+		utki::assert(!this->state_stack.empty(), SL);
 		switch (this->state_stack.back()) {
 			case state::idle:
 				this->parse_idle(i, e);
@@ -121,7 +121,7 @@ void parser::feed(utki::span<const char> data)
 void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
+		utki::assert(this->buf.empty(), SL);
 		switch (*i) {
 			case '\n':
 				++this->line;
@@ -143,7 +143,7 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 void parser::parse_object(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
+		utki::assert(this->buf.empty(), SL);
 		switch (*i) {
 			case '\n':
 				++this->line;
@@ -193,7 +193,7 @@ void parser::parse_key(utki::span<const char>::iterator& i, utki::span<const cha
 void parser::parse_colon(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
+		utki::assert(this->buf.empty(), SL);
 		switch (*i) {
 			case '\n':
 				++this->line;
@@ -215,7 +215,7 @@ void parser::parse_colon(utki::span<const char>::iterator& i, utki::span<const c
 void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
+		utki::assert(this->buf.empty(), SL);
 		switch (*i) {
 			case '\n':
 				++this->line;
@@ -243,7 +243,7 @@ void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const c
 			case 't': // first letter of 'false' word
 			case 'f': // first letter of 'true' word
 			case 'n': // first letter of 'null' word
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->buf.push_back(*i);
 				this->state_stack.pop_back();
 				this->state_stack.push_back(state::comma);
@@ -267,7 +267,7 @@ void parser::parse_value(utki::span<const char>::iterator& i, utki::span<const c
 void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
+		utki::assert(this->buf.empty(), SL);
 		switch (*i) {
 			case '\n':
 				++this->line;
@@ -296,7 +296,7 @@ void parser::parse_array(utki::span<const char>::iterator& i, utki::span<const c
 			case 't': // first letter of 'true' word
 			case 'f': // first letter of 'false' word
 			case 'n': // first letter of 'null' word
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->buf.push_back(*i);
 				this->state_stack.push_back(state::comma);
 				this->state_stack.push_back(state::boolean_or_null_or_number);
@@ -339,7 +339,7 @@ void parser::parse_string(utki::span<const char>::iterator& i, utki::span<const 
 void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
+		utki::assert(this->buf.empty(), SL);
 		switch (*i) {
 			case '\n':
 				++this->line;
@@ -352,7 +352,7 @@ void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const c
 				return;
 			case '}':
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				if (this->state_stack.back() != state::object) {
 					this->throw_malformed_json_error(*i, "comma");
 				}
@@ -361,7 +361,7 @@ void parser::parse_comma(utki::span<const char>::iterator& i, utki::span<const c
 				return;
 			case ']':
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				if (this->state_stack.back() != state::array) {
 					this->throw_malformed_json_error(*i, "comma");
 				}
@@ -390,38 +390,38 @@ void parser::parse_boolean_or_null_or_number(utki::span<const char>::iterator& i
 			case ',':
 				this->notify_boolean_or_null_or_number_parsed();
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
-				ASSERT(this->state_stack.back() == state::comma)
+				utki::assert(!this->state_stack.empty(), SL);
+				utki::assert(this->state_stack.back() == state::comma, SL);
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				return;
 			case ']':
 				this->notify_boolean_or_null_or_number_parsed();
 				this->on_array_end();
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
-				ASSERT(this->state_stack.back() == state::comma)
+				utki::assert(!this->state_stack.empty(), SL);
+				utki::assert(this->state_stack.back() == state::comma, SL);
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				if (this->state_stack.back() != state::array) {
 					this->throw_malformed_json_error('}', "boolean or null or number");
 				}
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				return;
 			case '}':
 				this->notify_boolean_or_null_or_number_parsed();
 				this->on_object_end();
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
-				ASSERT(this->state_stack.back() == state::comma)
+				utki::assert(!this->state_stack.empty(), SL);
+				utki::assert(this->state_stack.back() == state::comma, SL);
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				if (this->state_stack.back() != state::object) {
 					this->throw_malformed_json_error('}', "boolean or null or number");
 				}
 				this->state_stack.pop_back();
-				ASSERT(!this->state_stack.empty())
+				utki::assert(!this->state_stack.empty(), SL);
 				return;
 			default:
 				this->buf.push_back(*i);
@@ -591,7 +591,7 @@ void parser::parse_string_escape_sequence(utki::span<const char>::iterator& i, u
 void parser::parse_unicode_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
 	for (; i != e; ++i) {
-		ASSERT(this->unicode_char_digit_num < 4)
+		utki::assert(this->unicode_char_digit_num < 4, SL);
 
 		if (!is_hex_digit(*i)) {
 			this->throw_malformed_json_error(*i, "unicode character");

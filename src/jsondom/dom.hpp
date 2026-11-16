@@ -209,8 +209,8 @@ public:
 	 */
 	jsondom::type get_type() const noexcept
 	{
-		ASSERT(!this->var.valueless_by_exception())
-		ASSERT(this->var.index() < size_t(jsondom::type::enum_size))
+		utki::assert(!this->var.valueless_by_exception(), SL);
+		utki::assert(this->var.index() < size_t(jsondom::type::enum_size), SL);
 		// NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange, "TODO: why does it complain?")
 		return jsondom::type(this->var.index());
 	}

@@ -103,7 +103,7 @@ struct dom_parser : public parser {
 
 	void on_object_start() override
 	{
-		ASSERT(!this->stack.empty())
+		utki::assert(!this->stack.empty(), SL);
 		auto back = this->stack.back();
 		switch (back->get_type()) {
 			case type::array:
@@ -116,7 +116,7 @@ struct dom_parser : public parser {
 				this->key.clear();
 				break;
 			default:
-				ASSERT(false)
+				utki::assert(false, SL);
 				break;
 		}
 	}
@@ -128,7 +128,7 @@ struct dom_parser : public parser {
 
 	void on_array_start() override
 	{
-		ASSERT(!this->stack.empty())
+		utki::assert(!this->stack.empty(), SL);
 		auto back = this->stack.back();
 		switch (back->get_type()) {
 			case type::array:
@@ -141,7 +141,7 @@ struct dom_parser : public parser {
 				this->key.clear();
 				break;
 			default:
-				ASSERT(false)
+				utki::assert(false, SL);
 				break;
 		}
 	}
@@ -158,7 +158,7 @@ struct dom_parser : public parser {
 
 	void on_string_parsed(utki::span<const char> str) override
 	{
-		ASSERT(!this->stack.empty())
+		utki::assert(!this->stack.empty(), SL);
 		auto back = this->stack.back();
 		switch (back->get_type()) {
 			case type::array:
@@ -169,14 +169,14 @@ struct dom_parser : public parser {
 				this->key.clear();
 				break;
 			default:
-				ASSERT(false)
+				utki::assert(false, SL);
 				break;
 		}
 	}
 
 	void on_number_parsed(utki::span<const char> str) override
 	{
-		ASSERT(!this->stack.empty())
+		utki::assert(!this->stack.empty(), SL);
 		auto back = this->stack.back();
 		switch (back->get_type()) {
 			case type::array:
@@ -187,14 +187,14 @@ struct dom_parser : public parser {
 				this->key.clear();
 				break;
 			default:
-				ASSERT(false)
+				utki::assert(false, SL);
 				break;
 		}
 	}
 
 	void on_boolean_parsed(bool b) override
 	{
-		ASSERT(!this->stack.empty())
+		utki::assert(!this->stack.empty(), SL);
 		auto back = this->stack.back();
 		switch (back->get_type()) {
 			case type::array:
@@ -205,14 +205,14 @@ struct dom_parser : public parser {
 				this->key.clear();
 				break;
 			default:
-				ASSERT(false)
+				utki::assert(false, SL);
 				break;
 		}
 	}
 
 	void on_null_parsed() override
 	{
-		ASSERT(!this->stack.empty())
+		utki::assert(!this->stack.empty(), SL);
 		auto back = this->stack.back();
 		switch (back->get_type()) {
 			case type::array:
@@ -223,7 +223,7 @@ struct dom_parser : public parser {
 				this->key.clear();
 				break;
 			default:
-				ASSERT(false)
+				utki::assert(false, SL);
 				break;
 		}
 	}
@@ -251,10 +251,14 @@ jsondom::value jsondom::read(const fsif::file& fi)
 		}
 	}
 
-	ASSERT(p.stack.size() == 1, [&](auto& o) {
-		o << "p.stack.size() = " << p.stack.size();
-	})
-	ASSERT(p.doc.is<type::array>())
+	utki::assert(
+		p.stack.size() == 1,
+		[&](auto& o) {
+			o << "p.stack.size() = " << p.stack.size();
+		},
+		SL
+	);
+	utki::assert(p.doc.is<type::array>(), SL);
 
 	if (p.doc.array().empty()) {
 		return {};
